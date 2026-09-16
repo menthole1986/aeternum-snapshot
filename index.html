@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aeternum Longevity Snapshot</title>
+<meta name="theme-color" content="#19191B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --ground:#19191B; --ink:#F4F4F6; --muted:rgba(244,244,246,.62); --dim:rgba(244,244,246,.40);
+  --line:rgba(255,255,255,.14); --line2:rgba(255,255,255,.24);
+  --grad:linear-gradient(90deg,#7A3E9E,#2F86CC);
+  --grad-text:linear-gradient(90deg,#A27AD2,#4FA3E0);
+  --good:#5ED3A0; --ok:#B5D333; --warn:#F2B45A; --crit:#EE7A6D;
+  --gut:clamp(20px,calc(7.3*var(--u)),calc(140px*var(--k)));
+  /* škálování: --u = 1vw, ale na nízkých/širokých displejích (nebo při zoomu) ho omezí výška (16:9);
+     --k zvedá stropy velikostí na velkých obrazovkách (1440p, 4K, TV) */
+  --u:min(1vw,1.7778vh); --k:1;
+  --font:'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (min-width:2200px) and (min-height:1200px){:root{--k:1.35}}
+@media (min-width:3000px) and (min-height:1650px){:root{--k:2}}
+@media (max-width:760px){:root{--u:1vw}}
+html{-webkit-text-size-adjust:100%}
+html,body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--font)}
+body{min-height:100dvh;line-height:1.5}
+button,input{font:inherit;color:inherit}
+p{margin:0}
+:focus-visible{outline:2px solid #4FA3E0;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- background ---------- */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:var(--ground)}
+.bg svg.wave{position:absolute;inset:0;width:100%;height:100%}
+.glow{position:absolute;border-radius:50%;filter:blur(40px)}
+@media (max-width:760px){.bg .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(25,25,27,.92) 0%,rgba(25,25,27,.7) 55%,rgba(25,25,27,.15) 100%)}}
+
+/* ---------- shell ---------- */
+.app{position:relative;z-index:1;min-height:100dvh;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:clamp(18px,calc(3.1*var(--u)),calc(58px*var(--k))) var(--gut) 0}
+main{flex:1;display:flex;align-items:center;padding:clamp(28px,calc(3.2*var(--u)),calc(60px*var(--k))) var(--gut)}
+main > .screen{width:100%}
+.foot{padding:0 var(--gut) clamp(20px,calc(3.6*var(--u)),calc(70px*var(--k)));display:flex;flex-direction:column;gap:clamp(20px,calc(2.4*var(--u)),calc(44px*var(--k)))}
+.foot:empty{display:none}
+.screen{animation:rise .4s ease both}
+@keyframes rise{from{opacity:.001;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* logo */
+.logo{display:flex;align-items:center;gap:clamp(12px,calc(1.15*var(--u)),calc(22px*var(--k)));text-decoration:none;color:inherit}
+.logo svg{width:clamp(46px,calc(3.45*var(--u)),calc(66px*var(--k)));height:clamp(46px,calc(3.45*var(--u)),calc(66px*var(--k)));fill:none;stroke:#6B3A96;stroke-width:6.5;flex:none}
+.logo .wm{display:flex;flex-direction:column;gap:4px}
+.logo .wm b{font-size:clamp(21px,calc(1.62*var(--u)),calc(31px*var(--k)));font-weight:600;letter-spacing:.035em;line-height:1;background:linear-gradient(90deg,#6E3D9C,#2F7FC4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo .wm span{font-size:clamp(9px,calc(.68*var(--u)),calc(13px*var(--k)));letter-spacing:.44em;color:#6B4A9A;font-weight:500;line-height:1}
+.logo.big svg{width:clamp(62px,calc(6.15*var(--u)),calc(118px*var(--k)));height:clamp(62px,calc(6.15*var(--u)),calc(118px*var(--k)))}
+.logo.big .wm{gap:6px}
+.logo.big .wm b{font-size:clamp(28px,calc(2.8*var(--u)),calc(54px*var(--k)))}
+.logo.big .wm span{font-size:clamp(12px,calc(1.25*var(--u)),calc(24px*var(--k)))}
+
+.contacts{display:flex;gap:clamp(18px,calc(2.3*var(--u)),calc(44px*var(--k)))}
+.contacts a{display:block;width:clamp(30px,calc(2.2*var(--u)),calc(42px*var(--k)));height:clamp(30px,calc(2.2*var(--u)),calc(42px*var(--k)))}
+.contacts svg{width:100%;height:100%}
+
+.prog{display:flex;flex-direction:column;align-items:flex-end;gap:14px}
+.prog .lbl{font-size:clamp(11px,calc(.8*var(--u)),calc(15px*var(--k)));letter-spacing:.32em;font-weight:600;color:var(--dim);white-space:nowrap}
+.prog .lbl b{color:var(--ink);font-weight:600}
+.segs{display:flex;gap:7px}
+.segs i{width:clamp(16px,calc(2*var(--u)),calc(38px*var(--k)));height:3px;border-radius:2px;background:rgba(255,255,255,.16)}
+.segs i.on{background:#5462B6}
+.top-actions{display:flex;align-items:center;gap:14px}
+.linkbtn{background:none;border:0;padding:6px 0;color:var(--dim);font-size:clamp(11px,calc(.75*var(--u)),calc(13px*var(--k)));letter-spacing:.26em;font-weight:600;cursor:pointer;text-transform:uppercase}
+.linkbtn:hover{color:var(--ink)}
+@media (max-width:760px){.prog .lbl{display:none}}
+
+/* type */
+.eyebrow{display:inline-block;font-size:clamp(11px,calc(.85*var(--u)),calc(16px*var(--k)));font-weight:600;letter-spacing:.34em;text-transform:uppercase;background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bar{display:block;width:clamp(64px,calc(5.2*var(--u)),calc(100px*var(--k)));height:4px;background:var(--grad)}
+.h-hero{margin:0;font-size:clamp(40px,calc(5*var(--u)),calc(96px*var(--k)));font-weight:700;line-height:1.02;letter-spacing:-.012em;text-wrap:balance}
+.light{font-weight:400;background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent}
+.h-xl{margin:clamp(10px,calc(1*var(--u)),calc(18px*var(--k))) 0 0;font-size:clamp(38px,calc(5.2*var(--u)),calc(104px*var(--k)));font-weight:700;line-height:1;letter-spacing:-.02em}
+.h-l{margin:clamp(10px,calc(1*var(--u)),calc(18px*var(--k))) 0 0;font-size:clamp(32px,calc(3.75*var(--u)),calc(72px*var(--k)));font-weight:700;line-height:1.06;letter-spacing:-.012em}
+.body-wide{font-size:clamp(16px,calc(1.35*var(--u)),calc(26px*var(--k)));font-weight:500;letter-spacing:.14em;line-height:1.62;color:rgba(244,244,246,.92);max-width:31em}
+.lead{font-size:clamp(15px,calc(1.15*var(--u)),calc(22px*var(--k)));font-weight:500;letter-spacing:.04em;line-height:1.62;color:var(--muted);max-width:30em}
+.small-caps{font-size:clamp(11px,calc(.8*var(--u)),calc(15px*var(--k)));letter-spacing:.3em;font-weight:600;color:var(--dim);text-transform:uppercase}
+@media (max-width:760px){.body-wide{letter-spacing:.05em}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;height:clamp(54px,calc(3.45*var(--u)),calc(66px*var(--k)));padding:0 clamp(26px,calc(2.4*var(--u)),calc(46px*var(--k)));border-radius:999px;border:0;font-size:clamp(13px,calc(.9*var(--u)),calc(17px*var(--k)));font-weight:700;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap;cursor:pointer;transition:filter .15s,transform .1s,opacity .15s;text-decoration:none}
+.btn:active{transform:scale(.98)}
+.btn.pri{background:var(--grad);color:#fff}
+.btn.pri:hover{filter:brightness(1.12)}
+.btn.ghost{background:transparent;border:1.5px solid rgba(255,255,255,.28);color:var(--ink)}
+.btn.ghost:hover{border-color:rgba(255,255,255,.55)}
+.btn.sm{height:clamp(44px,calc(2.7*var(--u)),calc(52px*var(--k)));padding:0 clamp(18px,calc(1.6*var(--u)),calc(30px*var(--k)));font-size:clamp(11px,calc(.73*var(--u)),calc(14px*var(--k)))}
+.btn[disabled]{opacity:.38;cursor:default}
+.round{width:clamp(54px,calc(3.45*var(--u)),calc(66px*var(--k)));height:clamp(54px,calc(3.45*var(--u)),calc(66px*var(--k)));border-radius:50%;border:1.5px solid rgba(255,255,255,.28);background:transparent;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.round:hover{border-color:rgba(255,255,255,.55)}
+.round svg{width:calc(24px*var(--k));height:calc(24px*var(--k));stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.navrow{display:flex;flex-wrap:wrap;align-items:center;gap:clamp(12px,calc(1*var(--u)),calc(20px*var(--k)))}
+.nav-right{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:clamp(12px,calc(1*var(--u)),calc(20px*var(--k)));margin-left:auto}
+.navrow .err{flex:1;text-align:right}
+.err{font-size:clamp(13px,calc(.85*var(--u)),calc(16px*var(--k)));color:var(--crit);font-weight:600;letter-spacing:.02em}
+.err:empty{display:none}
+@media (max-width:760px){
+  .foot.sticky{position:sticky;bottom:0;padding-top:22px;background:linear-gradient(to top,var(--ground) 72%,rgba(25,25,27,0))}
+  .navrow{align-items:flex-start}
+  .nav-right{flex:1 1 0;min-width:0;gap:10px}
+  .nav-right .btn{flex:1 1 100%}
+  .nav-right .btn.pri{order:-1}
+  .nav-right .btn.ghost{height:calc(46px*var(--k));font-size:11px}
+  .navrow .err{flex-basis:100%;order:-1;text-align:left}
+}
+
+/* pillar strip */
+.strip{display:flex;flex-wrap:wrap;gap:clamp(12px,calc(1.15*var(--u)),calc(22px*var(--k)));font-size:clamp(12px,calc(1*var(--u)),calc(19px*var(--k)));font-weight:500;letter-spacing:.34em;color:rgba(244,244,246,.34);white-space:nowrap}
+.strip b{font-weight:600;color:var(--ink)}
+.strip.all{color:var(--ink)}
+@media (max-width:1100px){.strip.qs{display:none}}
+@media (max-width:760px){.strip{font-size:11px;letter-spacing:.22em;gap:8px 10px}}
+
+/* split layout */
+.split{display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1fr);gap:clamp(36px,calc(6.5*var(--u)),calc(130px*var(--k)));align-items:start}
+@media (max-width:1000px){.split{grid-template-columns:1fr}}
+
+/* intro */
+.intro{max-width:calc(1240px*var(--k))}
+.intro .body-wide{margin-top:clamp(18px,calc(1.5*var(--u)),calc(28px*var(--k)))}
+.intro .bar{margin-top:clamp(28px,calc(2.6*var(--u)),calc(50px*var(--k)))}
+.intro .btn{margin-top:clamp(40px,calc(4.2*var(--u)),calc(80px*var(--k)))}
+
+/* underline fields */
+.ufrow{display:grid;gap:clamp(22px,calc(2.5*var(--u)),calc(48px*var(--k)));grid-template-columns:repeat(var(--cols,3),minmax(0,1fr))}
+.ufrow.four{--cols:4}
+.ufrow.two{--cols:2}
+.ufrow.one{--cols:1}
+@media (max-width:760px){.ufrow{--cols:2!important}.ufrow.one{--cols:1!important}}
+.uf{display:flex;flex-direction:column;gap:clamp(8px,calc(.75*var(--u)),calc(14px*var(--k)));min-width:0;padding-bottom:clamp(10px,calc(.95*var(--u)),calc(18px*var(--k)));border-bottom:1.5px solid var(--line2);transition:border-color .15s}
+.uf:focus-within{border-color:#4FA3E0}
+.uf.invalid{border-color:var(--crit)}
+.uf label,.uf .lab{font-size:clamp(10px,calc(.73*var(--u)),calc(14px*var(--k)));letter-spacing:.28em;font-weight:600;color:var(--dim);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.uf label em,.uf .lab em{font-style:normal;letter-spacing:.12em;text-transform:none;font-weight:500}
+.uf input{width:100%;min-width:0;background:transparent;border:0;outline:none;padding:0;font-size:clamp(22px,calc(1.9*var(--u)),calc(36px*var(--k)));font-weight:400;line-height:1.15}
+.uf input::placeholder{color:rgba(244,244,246,.22)}
+.uf.big input{font-size:clamp(34px,calc(4.4*var(--u)),calc(84px*var(--k)));font-weight:300;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.uf.mid input{font-size:clamp(26px,calc(2.3*var(--u)),calc(44px*var(--k)));font-weight:600;font-variant-numeric:tabular-nums}
+.uf input[type="date"]{color-scheme:dark}
+.uf input::-webkit-outer-spin-button,.uf input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.uf input[type="number"]{-moz-appearance:textfield}
+.bp{display:flex;align-items:baseline;gap:6px}
+.bp input{width:3.1ch;flex:none}
+.bp span{font-size:clamp(34px,calc(4.4*var(--u)),calc(84px*var(--k)));font-weight:200;color:var(--dim);line-height:1}
+.upload{position:relative;display:flex;align-items:center;gap:clamp(16px,calc(1.6*var(--u)),calc(30px*var(--k)));border:1.5px dashed rgba(255,255,255,.26);border-radius:clamp(20px,calc(1.5*var(--u)),calc(28px*var(--k)));padding:clamp(18px,calc(1.7*var(--u)),calc(32px*var(--k))) clamp(18px,calc(1.9*var(--u)),calc(36px*var(--k)));cursor:pointer;transition:border-color .15s,background .15s}
+.upload:hover{border-color:#4FA3E0;background:rgba(47,134,204,.06)}
+.upload input{position:absolute;width:1px;height:1px;opacity:0}
+.upload .ic{width:clamp(52px,calc(4*var(--u)),calc(76px*var(--k)));height:clamp(52px,calc(4*var(--u)),calc(76px*var(--k)));border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;flex:none}
+.upload .ic svg{width:44%;height:44%;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.upload .tx{flex:1;min-width:0}
+.upload .tx b{display:block;font-size:clamp(17px,calc(1.35*var(--u)),calc(26px*var(--k)));font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upload .tx span{display:block;font-size:clamp(13px,calc(.95*var(--u)),calc(18px*var(--k)));color:var(--muted);margin-top:4px}
+.upload .tx span.ok{color:var(--good)}
+@media (max-width:760px){.upload .btn{display:none}}
+.minipills{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.minipill{height:clamp(40px,calc(2.4*var(--u)),calc(46px*var(--k)));padding:0 clamp(16px,calc(1.2*var(--u)),calc(22px*var(--k)));border-radius:999px;border:1.5px solid rgba(255,255,255,.22);background:transparent;font-size:clamp(13px,calc(.85*var(--u)),calc(16px*var(--k)));font-weight:600;cursor:pointer;color:var(--muted)}
+.minipill[aria-pressed="true"]{background:var(--grad);border-color:transparent;color:#fff}
+.tip{font-size:clamp(13px,calc(.85*var(--u)),calc(16px*var(--k)));color:var(--dim);line-height:1.6;margin-top:clamp(14px,calc(1.2*var(--u)),calc(22px*var(--k)));max-width:36em}
+
+/* checkbox */
+.cbox{position:relative;display:flex;gap:clamp(14px,calc(1*var(--u)),calc(20px*var(--k)));align-items:flex-start;cursor:pointer;font-size:clamp(13px,calc(.8*var(--u)),calc(15px*var(--k)));line-height:1.6;color:var(--muted)}
+.cbox input{position:absolute;opacity:0;width:1px;height:1px}
+.cbox .box{width:calc(26px*var(--k));height:calc(26px*var(--k));border-radius:8px;border:1.5px solid rgba(255,255,255,.35);flex:none;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:background .15s,border-color .15s}
+.cbox .box svg{width:calc(16px*var(--k));height:calc(16px*var(--k));stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.cbox input:checked + .box{background:var(--grad);border-color:transparent}
+.cbox input:checked + .box svg{opacity:1}
+.cbox input:focus-visible + .box{outline:2px solid #4FA3E0;outline-offset:3px}
+.cbox em{font-style:normal;color:var(--dim)}
+.consents{display:flex;flex-direction:column;gap:18px;margin-top:clamp(28px,calc(2.6*var(--u)),calc(48px*var(--k)))}
+
+/* question */
+.qcount{display:flex;align-items:center;gap:18px;margin-top:clamp(28px,calc(2.9*var(--u)),calc(56px*var(--k)))}
+.qcount .segs i{width:clamp(22px,calc(2.3*var(--u)),calc(44px*var(--k)))}
+.qpre{margin-bottom:clamp(12px,calc(1*var(--u)),calc(18px*var(--k)))}
+.qtext{font-size:clamp(24px,calc(2.6*var(--u)),calc(50px*var(--k)));font-weight:600;line-height:1.2;letter-spacing:-.005em;text-wrap:balance}
+.qtext.long{font-size:clamp(22px,calc(2.1*var(--u)),calc(40px*var(--k)))}
+@media (min-width:1001px){.rows.cols2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:clamp(24px,calc(2.3*var(--u)),calc(44px*var(--k)))}.rows.cols2 .rowopt:nth-child(2){border-top:1px solid rgba(255,255,255,.12)}}
+.qhint{margin-top:14px;font-size:clamp(14px,calc(.95*var(--u)),calc(18px*var(--k)));color:var(--muted);line-height:1.55}
+.opts{display:flex;flex-wrap:wrap;gap:clamp(10px,calc(.95*var(--u)),calc(18px*var(--k)));margin-top:clamp(30px,calc(3.3*var(--u)),calc(64px*var(--k)))}
+.opt{height:clamp(64px,calc(5.8*var(--u)),calc(112px*var(--k)));min-width:clamp(84px,calc(9.9*var(--u)),calc(190px*var(--k)));padding:0 clamp(22px,calc(1.9*var(--u)),calc(36px*var(--k)));border-radius:999px;border:1.5px solid rgba(255,255,255,.22);background:transparent;display:flex;align-items:center;justify-content:center;font-size:clamp(20px,calc(2*var(--u)),calc(38px*var(--k)));font-weight:600;color:rgba(244,244,246,.84);cursor:pointer;transition:border-color .15s,background .15s,transform .1s}
+.opts.sm .opt{height:clamp(52px,calc(3.9*var(--u)),calc(74px*var(--k)));min-width:0;font-size:clamp(16px,calc(1.3*var(--u)),calc(25px*var(--k)));padding:0 clamp(18px,calc(1.5*var(--u)),calc(30px*var(--k)))}
+.opt:hover{border-color:rgba(255,255,255,.5)}
+.opt:active{transform:scale(.98)}
+.opt[aria-pressed="true"]{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 18px 50px rgba(47,134,204,.28)}
+.scale-ends{display:flex;justify-content:space-between;max-width:calc(5 * clamp(84px,calc(9.9*var(--u)),calc(190px*var(--k))) + 4 * clamp(10px,calc(.95*var(--u)),calc(18px*var(--k))));margin-top:14px}
+.rows{margin-top:clamp(26px,calc(2.3*var(--u)),calc(44px*var(--k)));border-bottom:1px solid rgba(255,255,255,.12)}
+.rowopt{width:100%;display:flex;align-items:center;gap:clamp(16px,calc(1.45*var(--u)),calc(28px*var(--k)));min-height:clamp(58px,calc(3.9*var(--u)),calc(76px*var(--k)));padding:10px 0;border:0;border-top:1px solid rgba(255,255,255,.12);background:transparent;text-align:left;font-size:clamp(17px,calc(1.35*var(--u)),calc(26px*var(--k)));font-weight:500;color:var(--muted);cursor:pointer;transition:color .15s}
+.rowopt:hover{color:var(--ink)}
+.rowopt .mark{width:clamp(24px,calc(1.56*var(--u)),calc(30px*var(--k)));height:clamp(24px,calc(1.56*var(--u)),calc(30px*var(--k)));border-radius:50%;border:2px solid rgba(255,255,255,.35);flex:none;display:flex;align-items:center;justify-content:center}
+.rowopt.multi .mark{border-radius:8px}
+.rowopt .mark svg{width:60%;height:60%;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;display:none}
+.rowopt[aria-pressed="true"]{color:#fff;font-weight:600}
+.rowopt[aria-pressed="true"] .mark{border-color:transparent;background:var(--grad)}
+.rowopt:not(.multi)[aria-pressed="true"] .mark::after{content:"";width:34%;height:34%;border-radius:50%;background:#fff}
+.rowopt.multi[aria-pressed="true"] .mark svg{display:block}
+.autohint{margin-top:clamp(22px,calc(1.9*var(--u)),calc(36px*var(--k)))}
+
+/* generating */
+.checks{display:flex;flex-direction:column;gap:clamp(10px,calc(.75*var(--u)),calc(14px*var(--k)));margin-top:clamp(30px,calc(2.7*var(--u)),calc(52px*var(--k)));font-size:clamp(13px,calc(1*var(--u)),calc(19px*var(--k)));letter-spacing:.3em;font-weight:600}
+.checks div{display:flex;align-items:center;gap:18px;color:var(--dim);transition:color .3s}
+.checks .ic{width:calc(22px*var(--k));height:calc(22px*var(--k));display:flex;align-items:center;justify-content:center;flex:none}
+.checks .ic svg{width:calc(22px*var(--k));height:calc(22px*var(--k));stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;display:none}
+.checks .ic::after{content:"";width:calc(10px*var(--k));height:calc(10px*var(--k));border-radius:50%;background:rgba(255,255,255,.3)}
+.checks .done{color:var(--ink)}
+.checks .done .ic svg{display:block}
+.checks .done .ic::after{display:none}
+.checks .cur{color:var(--ink)}
+.checks .cur .ic::after{width:calc(14px*var(--k));height:calc(14px*var(--k));background:var(--grad);box-shadow:0 0 0 6px rgba(79,163,224,.2)}
+.ringwrap{position:relative;display:flex;justify-content:center;align-items:center}
+.ringwrap::before{content:"";position:absolute;width:58%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16),rgba(255,255,255,0) 70%);animation:breathe 3.2s ease-in-out infinite}
+.ringwrap svg{position:relative;width:min(100%,520px);height:auto}
+.ringwrap .orbit{transform-origin:260px 260px;animation:orbit 2.8s linear infinite}
+#arc{transition:stroke-dashoffset .14s linear}
+.genbar i{transition:width .14s linear}
+@keyframes orbit{to{transform:rotate(360deg)}}
+@keyframes breathe{0%,100%{transform:scale(.92);opacity:.6}50%{transform:scale(1.08);opacity:1}}
+.gen-status{min-height:3.3em;transition:opacity .35s ease}
+.gen-status.fade{opacity:0}
+.genbar{display:none;height:3px;border-radius:2px;background:rgba(255,255,255,.16);overflow:hidden;margin-top:22px;max-width:calc(420px*var(--k))}
+.genbar i{display:block;height:100%;width:0;background:var(--grad)}
+@media (max-width:1000px){.ringwrap{display:none}.genbar{display:block}}
+
+/* result */
+.rsec{position:relative;z-index:1;padding:clamp(40px,calc(5.8*var(--u)),calc(110px*var(--k))) var(--gut);border-top:1px solid rgba(255,255,255,.08)}
+.rsec.first{border-top:0;padding-top:clamp(24px,calc(3*var(--u)),calc(56px*var(--k)))}
+.index-row{display:flex;flex-wrap:wrap;align-items:center;gap:clamp(20px,calc(2.3*var(--u)),calc(44px*var(--k)));margin-top:clamp(22px,calc(2*var(--u)),calc(40px*var(--k)))}
+.index-num{font-size:clamp(120px,calc(15*var(--u)),calc(290px*var(--k)));font-weight:200;line-height:.86;letter-spacing:-.05em;background:linear-gradient(120deg,#B391E0,#4FA3E0);-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
+.index-side{display:flex;flex-direction:column;gap:clamp(12px,calc(1*var(--u)),calc(20px*var(--k)));align-items:flex-start}
+.pill{display:inline-flex;align-items:center;height:clamp(36px,calc(2.4*var(--u)),calc(46px*var(--k)));padding:0 clamp(14px,calc(1.15*var(--u)),calc(22px*var(--k)));border-radius:999px;font-size:clamp(11px,calc(.78*var(--u)),calc(15px*var(--k)));letter-spacing:.22em;font-weight:700;white-space:nowrap;text-transform:uppercase}
+.pill.good{color:var(--good);border:1.5px solid rgba(94,211,160,.5)}
+.pill.ok{color:var(--ok);border:1.5px solid rgba(181,211,51,.5)}
+.pill.warn{color:var(--warn);border:1.5px solid rgba(242,180,90,.55)}
+.pill.crit{color:var(--crit);border:1.5px solid rgba(238,122,109,.55)}
+.pill.sm{height:calc(32px*var(--k));font-size:11px;padding:0 12px;letter-spacing:.18em}
+.conf-dots{color:#4FA3E0;letter-spacing:.2em}
+.summary{margin-top:clamp(24px,calc(2.3*var(--u)),calc(44px*var(--k)))}
+.alerts{display:flex;flex-direction:column;gap:14px;margin-top:clamp(22px,calc(1.9*var(--u)),calc(36px*var(--k)));max-width:44em}
+.alert{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:baseline;font-size:clamp(14px,calc(.95*var(--u)),calc(18px*var(--k)));line-height:1.55;color:var(--ink)}
+.radar svg{width:100%;height:auto;display:block;max-width:calc(920px*var(--k));margin-left:auto}
+.more{display:inline-flex;align-items:center;gap:14px;margin-top:clamp(30px,calc(3*var(--u)),calc(56px*var(--k)));text-decoration:none}
+.more svg{width:calc(20px*var(--k));height:calc(20px*var(--k));stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.prio{display:flex;flex-direction:column;gap:clamp(24px,calc(2*var(--u)),calc(38px*var(--k)));margin-top:clamp(32px,calc(3.2*var(--u)),calc(62px*var(--k)))}
+.prio .it{display:grid;grid-template-columns:auto 1fr;gap:clamp(16px,calc(1.35*var(--u)),calc(26px*var(--k)));align-items:start}
+.prio .n{width:clamp(48px,calc(3.35*var(--u)),calc(64px*var(--k)));height:clamp(48px,calc(3.35*var(--u)),calc(64px*var(--k)));border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:clamp(18px,calc(1.25*var(--u)),calc(24px*var(--k)));font-weight:700}
+.prio b{display:block;font-size:clamp(19px,calc(1.35*var(--u)),calc(26px*var(--k)));font-weight:700;margin-top:4px}
+.prio p{font-size:clamp(15px,calc(1.05*var(--u)),calc(20px*var(--k)));color:var(--muted);line-height:1.55;margin-top:8px;max-width:30em}
+.prow{padding:14px 0 16px;border-bottom:1px solid rgba(255,255,255,.1)}
+.prow:first-child{padding-top:0}
+.prow:last-child{border-bottom:0}
+.prow .t{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+.prow .t span{font-size:clamp(12px,calc(.9*var(--u)),calc(17px*var(--k)));letter-spacing:.3em;font-weight:600;text-transform:uppercase}
+.prow .t b{font-size:clamp(30px,calc(2.3*var(--u)),calc(44px*var(--k)));font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.prow .track{height:4px;border-radius:2px;background:rgba(255,255,255,.1);margin:10px 0}
+.prow .track i{display:block;height:100%;border-radius:2px}
+.prow p{font-size:clamp(14px,calc(.95*var(--u)),calc(18px*var(--k)));color:var(--muted);line-height:1.5}
+.prow p.step{color:var(--ink);margin-top:6px}
+.prow p.step b{color:#8FC1EC;font-weight:600}
+.vals{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(150px,calc(11*var(--u)),calc(210px*var(--k))),1fr));gap:clamp(22px,calc(1.7*var(--u)),calc(32px*var(--k)))}
+.val{border-top:1.5px solid rgba(255,255,255,.16);padding-top:18px;display:flex;flex-direction:column;gap:10px}
+.val small{font-size:clamp(10px,calc(.7*var(--u)),calc(13px*var(--k)));letter-spacing:.28em;font-weight:600;color:var(--dim);text-transform:uppercase}
+.val b{font-size:clamp(30px,calc(2.3*var(--u)),calc(44px*var(--k)));font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+.val b em{font-style:normal;font-size:clamp(14px,calc(1.05*var(--u)),calc(20px*var(--k)));color:var(--dim);font-weight:500;margin-left:6px}
+.val span{font-size:clamp(12px,calc(.8*var(--u)),calc(15px*var(--k)));font-weight:600;letter-spacing:.06em}
+.sig{display:grid;grid-template-columns:1fr auto;gap:10px 16px;align-items:center;padding:clamp(16px,calc(1.3*var(--u)),calc(24px*var(--k))) 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.sig:first-child{padding-top:0}
+.sig:last-child{border-bottom:0}
+.sig > span:first-child{font-size:clamp(13px,calc(.95*var(--u)),calc(18px*var(--k)));letter-spacing:.26em;font-weight:600;text-transform:uppercase}
+.sig p{grid-column:1/-1;font-size:clamp(14px,calc(.95*var(--u)),calc(18px*var(--k)));color:var(--muted);line-height:1.55}
+.plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(20px,calc(1.6*var(--u)),calc(30px*var(--k))) clamp(24px,calc(2.3*var(--u)),calc(44px*var(--k)));margin-top:clamp(32px,calc(3*var(--u)),calc(58px*var(--k)))}
+@media (max-width:560px){.plans{grid-template-columns:1fr}}
+.plan{display:flex;gap:16px;align-items:flex-start}
+.plan svg{width:calc(22px*var(--k));height:calc(22px*var(--k));flex:none;margin-top:1px;stroke:#8FC1EC;fill:none;stroke-width:1.8}
+.plan b{display:block;font-size:clamp(12px,calc(.85*var(--u)),calc(16px*var(--k)));letter-spacing:.24em;font-weight:600;text-transform:uppercase}
+.plan span{display:block;font-size:clamp(14px,calc(.9*var(--u)),calc(17px*var(--k)));color:var(--muted);margin-top:6px;line-height:1.4}
+.panel{background:rgba(21,21,25,.9);border:1px solid rgba(255,255,255,.12);border-radius:clamp(24px,calc(1.9*var(--u)),calc(36px*var(--k)));padding:clamp(26px,calc(2.9*var(--u)),calc(56px*var(--k)))}
+.panel h3{margin:14px 0 0;font-size:clamp(28px,calc(2.3*var(--u)),calc(44px*var(--k)));font-weight:700;line-height:1.15}
+.price{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 22px;margin-top:clamp(14px,calc(1.15*var(--u)),calc(22px*var(--k)))}
+.price b{font-size:clamp(48px,calc(4.4*var(--u)),calc(84px*var(--k)));font-weight:700;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.price s{font-size:clamp(18px,calc(1.35*var(--u)),calc(26px*var(--k)));color:var(--dim);font-weight:600}
+.bul{display:flex;flex-direction:column;gap:12px;margin-top:clamp(20px,calc(1.45*var(--u)),calc(28px*var(--k)))}
+.bul div{display:flex;gap:16px;align-items:baseline;font-size:clamp(15px,calc(1.05*var(--u)),calc(20px*var(--k)));color:var(--muted);line-height:1.45}
+.bul div::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--grad);flex:none;transform:translateY(-3px)}
+.panel .interest{margin-top:clamp(22px,calc(1.6*var(--u)),calc(30px*var(--k)));padding:clamp(16px,calc(1.05*var(--u)),calc(20px*var(--k))) clamp(16px,calc(1.15*var(--u)),calc(22px*var(--k)));border:1.5px solid rgba(255,255,255,.2);border-radius:20px;font-size:clamp(15px,calc(1.05*var(--u)),calc(20px*var(--k)));font-weight:600;color:var(--ink);align-items:center}
+.panel .interest .box{width:calc(32px*var(--k));height:calc(32px*var(--k));border-radius:9px;margin-top:0}
+.panel .interest .box svg{width:calc(20px*var(--k));height:calc(20px*var(--k))}
+.ctaform{margin-top:clamp(22px,calc(1.6*var(--u)),calc(30px*var(--k)));display:flex;flex-direction:column;gap:clamp(20px,calc(1.5*var(--u)),calc(28px*var(--k)))}
+.ctaform .ufrow{--cols:3}
+@media (max-width:760px){.ctaform .ufrow{--cols:1!important}}
+.panel .btn.pri{width:100%}
+.fine{font-size:clamp(13px,calc(.8*var(--u)),calc(15px*var(--k)));color:var(--dim);line-height:1.55}
+.success{text-align:left}
+.success .tick{width:clamp(56px,calc(3.6*var(--u)),calc(68px*var(--k)));height:clamp(56px,calc(3.6*var(--u)),calc(68px*var(--k)));border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.success .tick svg{width:44%;height:44%;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.disclaimer{padding:clamp(24px,calc(2.3*var(--u)),calc(44px*var(--k))) var(--gut) clamp(32px,calc(3*var(--u)),calc(60px*var(--k)));font-size:clamp(12px,calc(.75*var(--u)),calc(14px*var(--k)));color:var(--dim);line-height:1.7;border-top:1px solid rgba(255,255,255,.08);position:relative;z-index:1}
+
+/* odeslání + platba */
+.send-status{display:flex;align-items:flex-start;gap:12px;max-width:44em;margin-top:clamp(16px,calc(1.4*var(--u)),calc(26px*var(--k)));font-size:clamp(13px,calc(.85*var(--u)),calc(16px*var(--k)));color:var(--muted);line-height:1.5}
+.send-status .dot{width:8px;height:8px;border-radius:50%;background:var(--dim);flex:none;margin-top:.55em}
+.send-status.sending .dot{background:#4FA3E0;animation:breathe 1.2s ease-in-out infinite}
+.send-status.sent .dot{background:var(--good)}
+.send-status.failed .dot{background:var(--crit)}
+.pay{display:grid;grid-template-columns:auto 1fr;gap:clamp(18px,calc(1.6*var(--u)),calc(30px*var(--k)));align-items:center;margin-top:clamp(20px,calc(1.6*var(--u)),calc(30px*var(--k)));padding:clamp(16px,calc(1.2*var(--u)),calc(24px*var(--k)));border:1px solid var(--line2);border-radius:20px}
+.pay .qr{background:#fff;border-radius:14px;padding:10px;line-height:0}
+.pay .qr img{width:clamp(150px,calc(11*var(--u)),calc(210px*var(--k)));height:auto;image-rendering:pixelated}
+.pay dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 18px;font-size:clamp(14px,calc(.95*var(--u)),calc(18px*var(--k)))}
+.pay dt{color:var(--dim);font-size:clamp(10px,calc(.7*var(--u)),calc(13px*var(--k)));letter-spacing:.24em;text-transform:uppercase;font-weight:600;align-self:center}
+.pay dd{margin:0;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+@media (max-width:560px){.pay{grid-template-columns:1fr;justify-items:center}.pay dl{width:100%}}
+
+/* PDF (vykresluje se mimo obrazovku) */
+.pdf-host{position:fixed;left:-12000px;top:0;width:794px;pointer-events:none}
+.pp{position:relative;width:794px;height:1123px;overflow:hidden;background:#fff;color:#19191B;font-family:'Montserrat',Arial,sans-serif;padding:60px 64px 70px;box-sizing:border-box}
+.pp.dark{background:#19191B;color:#F4F4F6}
+.pp p{margin:0}
+.pp .ph{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.pp .pl{display:flex;align-items:center;gap:10px}
+.pp .pl svg{width:36px;height:36px;fill:none;stroke:#6B3A96;stroke-width:6.5}
+.pp .pl b{display:block;font-size:17px;letter-spacing:.04em;color:#6E3D9C;font-weight:600;line-height:1;white-space:nowrap}
+.pp .pl > div{flex:none}
+.pp .eb{white-space:nowrap}
+.pp.dark .pl b{color:#9B78CF}
+.pp .pl b + span{display:block;font-size:7px;letter-spacing:.44em;color:#6B4A9A;margin-top:3px;font-weight:600}
+.pp .pn{font-size:9px;letter-spacing:.3em;font-weight:600;color:#8A8D99;text-transform:uppercase}
+.pp .eb{font-size:10px;letter-spacing:.32em;font-weight:700;text-transform:uppercase;color:#6E3D9C}
+.pp.dark .eb{color:#A27AD2}
+.pp h2{font-size:32px;line-height:1.1;font-weight:700;margin:8px 0 0;letter-spacing:-.01em}
+.pp .lt{font-weight:400;color:#6E3D9C}
+.pp.dark .lt{color:#A27AD2}
+.pp .lead{font-size:12.5px;line-height:1.6;color:#5A5E6B;letter-spacing:0;max-width:none}
+.pp.dark .lead{color:rgba(244,244,246,.78)}
+.pp .ft{position:absolute;left:64px;right:64px;bottom:30px;display:flex;justify-content:space-between;gap:20px;font-size:8px;line-height:1.5;color:#8A8D99}
+.pp.dark .ft{color:rgba(244,244,246,.45)}
+.pp .pill{height:24px;font-size:9px;padding:0 11px;letter-spacing:.18em;border-width:1.2px}
+.pp .prow2{padding:11px 0 12px;border-bottom:1px solid #ECEAF1}
+.pp .prow2 .t{display:flex;justify-content:space-between;align-items:baseline}
+.pp .prow2 .t span{font-size:9.5px;letter-spacing:.28em;font-weight:700;text-transform:uppercase}
+.pp .prow2 .t b{font-size:22px;font-weight:700}
+.pp .prow2 .tr{height:3px;background:#ECEAF1;border-radius:2px;margin:5px 0 7px}
+.pp .prow2 .tr i{display:block;height:100%;border-radius:2px}
+.pp .prow2 p{font-size:10.5px;line-height:1.45;color:#5A5E6B}
+.pp .prow2 p.s{color:#19191B;margin-top:3px}
+.pp .prow2 p.s b{color:#6E3D9C}
+.pp .pri{display:grid;grid-template-columns:34px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid #ECEAF1}
+.pp .pri .n{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#7A3E9E,#2F86CC);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.pp .pri b{font-size:14px}
+.pp .pri p{font-size:10.5px;line-height:1.5;color:#5A5E6B;margin-top:3px}
+.pp .pri p.s{color:#19191B}
+.pp .tl{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+.pp .tl div{border-top:1.2px solid #E0DDE8;padding-top:8px}
+.pp .tl small{display:block;font-size:7.5px;letter-spacing:.22em;font-weight:700;color:#8A8D99;text-transform:uppercase}
+.pp .tl b{display:block;font-size:19px;font-weight:600;margin-top:4px}
+.pp .tl b em{font-style:normal;font-size:9px;color:#8A8D99;margin-left:3px}
+.pp .tl span{display:block;font-size:9px;font-weight:600;margin-top:2px}
+.pp .sg{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:9px 0;border-bottom:1px solid #ECEAF1}
+.pp .sg > span:first-child{font-size:9.5px;letter-spacing:.24em;font-weight:700;text-transform:uppercase}
+.pp .sg p{grid-column:1/-1;font-size:10px;line-height:1.45;color:#5A5E6B}
+.pp .al{font-size:10.5px;line-height:1.5;padding:9px 12px;border-radius:10px;background:#F6F3EC;margin-top:8px}
+.pp .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 26px;margin-top:22px}
+.pp .pgrid div{display:flex;gap:10px}
+.pp .pgrid svg{width:16px;height:16px;flex:none;stroke:#6E3D9C;fill:none;stroke-width:1.8;margin-top:1px}
+.pp .pgrid b{display:block;font-size:9.5px;letter-spacing:.2em;font-weight:700;text-transform:uppercase}
+.pp .pgrid span{display:block;font-size:10.5px;color:#5A5E6B;margin-top:2px}
+.pp .box{margin-top:30px;background:#19191B;color:#F4F4F6;border-radius:20px;padding:28px 30px}
+.pp .box .pr{font-size:38px;font-weight:700;margin-top:6px}
+.pp .box .pr s{font-size:15px;color:rgba(244,244,246,.5);font-weight:600;margin-left:10px}
+.pp .box ul{margin:12px 0 0;padding-left:16px;font-size:11px;line-height:1.7;color:rgba(244,244,246,.78)}
+.pp .h3{font-size:13px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;margin-top:26px}
+
+/* kiosk overlay + demo */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(10,10,12,.86);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px}
+.overlay .box2{max-width:calc(520px*var(--k));text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px}
+.overlay .count{font-size:clamp(64px,calc(6*var(--u)),calc(110px*var(--k)));font-weight:200;line-height:1;background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
+.demo-tag{position:fixed;right:12px;bottom:12px;z-index:60;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--warn);color:#1a1300;padding:5px 9px;border-radius:6px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="waveG" x1="0.1" y1="0" x2="0.45" y2="1">
+      <stop offset="0" stop-color="#17609A"/><stop offset="0.38" stop-color="#1F8AD2"/><stop offset="0.7" stop-color="#5E57B4"/><stop offset="1" stop-color="#8E3C9C"/>
+    </linearGradient>
+    <radialGradient id="waveShade" cx="0.92" cy="0.05" r="0.6">
+      <stop offset="0" stop-color="#19191B" stop-opacity="0.95"/><stop offset="0.55" stop-color="#19191B" stop-opacity="0.35"/><stop offset="1" stop-color="#19191B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="radarFill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7A3E9E" stop-opacity="0.62"/><stop offset="1" stop-color="#2F86CC" stop-opacity="0.5"/></linearGradient>
+    <linearGradient id="radarStroke" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B391E0"/><stop offset="1" stop-color="#4FA3E0"/></linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="30"/></filter>
+    <filter id="softer" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="60"/></filter>
+    <symbol id="logoMark" viewBox="0 0 120 120"><circle cx="45" cy="70" r="37"/><circle cx="70" cy="47" r="40"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 17v-6M9.5 13.5 12 11l2.5 2.5"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+  </defs>
+</svg>
+
+<div class="bg" id="bg"></div>
+<div class="app" id="app">
+  <header class="top" id="top"></header>
+  <main id="main"></main>
+  <footer class="foot" id="foot"></footer>
+</div>
+
+<script>
+/* ==========================================================================
+   Aeternum Longevity Snapshot · verze pro ženy
+   Parametry URL: ?src=herbalance · &kiosk=1 · &demo=1 (ukázková data)
+   ========================================================================== */
+
+const URLP = new URLSearchParams(location.search);
+const CFG = {
+  src: (URLP.get('src') || 'web').toLowerCase(),
+  kiosk: URLP.get('kiosk') === '1',
+  demo: URLP.get('demo') === '1',
+  priceRegular: 19970,
+  priceFestival: 15970,
+  festivalSources: ['herbalance'],
+  festivalUntil: '2026-11-30',
+  idleSeconds: 120,
+  idleCountdown: 15,
+  thanksResetSeconds: 90,
+  autoAdvanceMs: 320,
+  storageKey: 'aeternum-snapshot-v2',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbxGspe0GaVfxUX2phbkcafqJGIn9Redqki6U_jnaOrG1nI1aOIb8jFZx9_tCmAcEPt4IA/exec', // webová aplikace z aeternum_snapshot_apps_script.gs; prázdné = bez AI
+  extractTimeoutMs: 60000,
+  generateTimeoutMs: 45000,
+  phone: '+420775481700',
+  email: 'info@aeternumclinic.cz',
+  mapUrl: 'https://maps.google.com/?q=Bulovka+Medical+%26+Business+Centre+Praha+8'
+};
+
+/* ---------- helpers ---------- */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt = n => Math.round(n).toLocaleString('cs-CZ');
+const num = v => { if (v === '' || v == null) return null; const n = parseFloat(String(v).replace(',', '.')); return isNaN(n) ? null : n; };
+const dec = v => String(v).replace('.', ',');
+function avgW(pairs) { let s = 0, w = 0; for (const [v, wt] of pairs) { if (v != null && !isNaN(v)) { s += v * wt; w += wt; } } return w ? s / w : null; }
+function mix(q, obj, wq, wo) { if (obj == null) return q; if (q == null) return obj; return q * wq + obj * wo; }
+const icon = (id, cls = '') => `<svg class="${cls}" aria-hidden="true"><use href="#${id}"/></svg>`;
+
+/* ---------- state ---------- */
+const newSid = () => (self.crypto && crypto.randomUUID) ? crypto.randomUUID() : Array.from({ length: 32 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
+const blank = () => ({ cur: 'intro', sid: newSid(), a: {}, m: {}, measSkipped: false, ai: null, cta: { open: false, done: false }, startedAt: new Date().toISOString() });
+let S = blank();
+function save() { if (CFG.kiosk) return; try { sessionStorage.setItem(CFG.storageKey, JSON.stringify(S)); } catch (e) {} }
+function load() { if (CFG.kiosk) return; try { const raw = sessionStorage.getItem(CFG.storageKey); if (raw) S = Object.assign(blank(), JSON.parse(raw)); } catch (e) {} }
+
+function ageFromDob(dob) {
+  if (!dob) return null;
+  const d = new Date(dob + 'T00:00:00'); if (isNaN(d)) return null;
+  const t = new Date(); let a = t.getFullYear() - d.getFullYear();
+  if (t.getMonth() < d.getMonth() || (t.getMonth() === d.getMonth() && t.getDate() < d.getDate())) a--;
+  return a;
+}
+const age = () => ageFromDob(S.a.dob);
+const hasBP = () => num(S.m.sys) != null && num(S.m.dia) != null;
+const pregnant = () => S.a.H0 === 4;
+
+/* ---------- question bank ---------- */
+const o = (label, score) => ({ label, score });
+const FREQ = ['nikdy', 'téměř nikdy', 'občas', 'docela často', 'velmi často'];
+
+const Q = {
+  M1: { label: 'Kolik dní v týdnu máte aspoň 30 minut pohybu, při kterém se zadýcháte?', opts: [o('0', 0), o('1–2', 40), o('3–4', 75), o('5+', 100)], w: .25,
+        tip: 'Přidejte 2× týdně 30 minut svižné chůze do kopce nebo jízdy na kole, při které se zadýcháte.' },
+  M2: { label: 'Jak často posilujete?', hint: 'Posilovna, cvičení s vlastní vahou, reformer pilates.', opts: [o('nikdy', 0), o('1× týdně', 50), o('2× týdně', 85), o('3× a víc', 100)], w: .25,
+        tip: 'Začněte 2× týdně 20 minutami posilování celého těla: dřepy, výpady, kliky o stůl.' },
+  M3: { label: 'Kolik kroků denně zhruba ujdete?', opts: [o('pod 4 000', 10), o('4–7 000', 45), o('7–10 000', 80), o('nad 10 000', 100), o('nevím', null)], w: .15,
+        tip: 'Navyšte denní kroky zhruba o 2 000, třeba 15 minutami chůze po obědě.' },
+  M4: { label: 'Kolik hodin denně prosedíte?', opts: [o('méně než 4', 100), o('4–7', 70), o('8–10', 35), o('víc než 10', 10)], w: .15,
+        tip: 'Každých 45 minut sezení se na 2–3 minuty postavte a projděte se.' },
+  M5: { label: 'Vyjdete 3 patra bez zastavení a bez výrazného zadýchání?', opts: [o('ano, snadno', 100), o('s námahou', 50), o('ne', 10)], w: .20,
+        tip: 'Choďte po schodech místo výtahu. Kondice se tak zlepšuje rychle.' },
+  N1: { label: 'Kolik porcí zeleniny a ovoce sníte denně?', opts: [o('0–1', 10), o('2–3', 50), o('4–5', 85), o('6+', 100)],
+        tip: 'Přidejte ke každému hlavnímu jídlu jednu porci zeleniny.' },
+  N2: { label: 'Ve kolika hlavních jídlech denně máte bílkoviny?', hint: 'Maso, ryby, vejce, luštěniny, tvaroh.', opts: [o('zřídka', 10), o('v jednom', 45), o('ve dvou', 80), o('ve všech', 100)],
+        tip: 'Zařaďte bílkoviny do každého hlavního jídla: vejce, tvaroh, ryby nebo luštěniny.' },
+  N3: { label: 'Jak často jíte sladkosti nebo fast food, případně pijete slazené nápoje?', opts: [o('denně', 10), o('několikrát týdně', 45), o('výjimečně', 100)],
+        tip: 'Nahraďte jednu sladkost denně ovocem s hrstí ořechů.' },
+  N4: { label: 'Kolik sklenek alkoholu vypijete za týden?', opts: [o('0', 100), o('1–3', 80), o('4–7', 40), o('8+', 10)],
+        tip: 'Zkuste na 4 týdny omezit alkohol jen na víkend. Pozná to spánek i energie.' },
+  N5: { label: 'Míváte chutě na sladké nebo únavu po jídle?', opts: [o('často', 15), o('někdy', 55), o('zřídka', 100)],
+        tip: 'Začínejte jídlo zeleninou a bílkovinou, přílohu nechte na konec. Stabilizuje to hladinu cukru.' },
+  N6: { label: 'Kolik vypijete denně vody a neslazených nápojů?', opts: [o('pod 1 l', 20), o('1–2 l', 70), o('2 l a víc', 100)],
+        tip: 'Mějte u sebe láhev s vodou a ke každému jídlu vypijte sklenici.' },
+  PSS1: { chips: true, pre: 'V posledním měsíci', label: 'Jak často jste měla pocit, že nemáte pod kontrolou důležité věci ve svém životě?', opts: FREQ.map((l, i) => o(l, i)) },
+  PSS2: { chips: true, pre: 'V posledním měsíci', label: 'Jak často jste si byla jistá, že své osobní problémy zvládnete?', opts: FREQ.map((l, i) => o(l, 4 - i)) },
+  PSS3: { chips: true, pre: 'V posledním měsíci', label: 'Jak často jste měla pocit, že se věci vyvíjejí tak, jak chcete?', opts: FREQ.map((l, i) => o(l, 4 - i)) },
+  PSS4: { chips: true, pre: 'V posledním měsíci', label: 'Jak často jste měla pocit, že se potíže hromadí natolik, že je nedokážete zvládnout?', opts: FREQ.map((l, i) => o(l, i)) },
+  Mi2: { label: 'Jak hodnotíte svou energii během dne?', scale: ['velmi nízká', 'výborná'], opts: [o('1', 10), o('2', 30), o('3', 55), o('4', 80), o('5', 100)],
+         tip: 'Dopolední denní světlo a krátká procházka po obědě pomáhají udržet energii.' },
+  Mi3: { label: 'Míváte mlhu v hlavě nebo potíže se soustředěním?', opts: [o('často', 20), o('někdy', 60), o('zřídka', 100)],
+         tip: 'Pracujte v 45minutových blocích bez notifikací a mezi nimi si dejte krátkou pauzu.' },
+  R1: { label: 'Kolik hodin průměrně spíte?', opts: [o('pod 5', 10), o('5–6', 40), o('6–7', 75), o('7–9', 100), o('nad 9', 70)], w: .30,
+        tip: 'Posuňte usínání o 30 minut dřív a stejný čas držte i o víkendu.' },
+  R2: { label: 'Jak hodnotíte kvalitu svého spánku?', scale: ['velmi špatná', 'výborná'], opts: [o('1', 10), o('2', 30), o('3', 55), o('4', 80), o('5', 100)], w: .25,
+        tip: 'Ztmavte a ochlaďte ložnici na 17–19 °C.' },
+  R3: { label: 'Máte aspoň 3× týdně potíže usnout nebo se v noci budíte?', opts: [o('ano', 25), o('ne', 100)], w: .20,
+        tip: 'Poslední kávu si dejte nejpozději ve 14 hodin.' },
+  R4: { label: 'Probouzíte se odpočatá?', opts: [o('zřídka', 15), o('někdy', 55), o('většinou', 100)], w: .25,
+        tip: 'Hodinu před spaním ztlumte světla a odložte obrazovky.' },
+  R5: { label: 'Řekl vám někdo, že chrápete nebo že vám ve spánku vynechává dech?', opts: [o('ano', null), o('ne', null), o('nevím', null)] },
+  S1: { label: 'Jak často jste aspoň 20 minut venku na denním světle?', opts: [o('denně', 100), o('několikrát týdně', 60), o('zřídka', 15)],
+        tip: 'Vyjděte ráno na 10–20 minut ven na denní světlo.' },
+  S2: { label: 'Kolik času týdně strávíte v přírodě, bez spěchu?', opts: [o('2 hodiny a víc', 100), o('do 2 hodin', 55), o('skoro vůbec', 15)],
+        tip: 'Naplánujte si každý týden aspoň 2 hodiny v přírodě bez telefonu.' },
+  S3: { label: 'Vstáváte ve stejný čas (±1 hodina) i o víkendu?', opts: [o('ano', 100), o('částečně', 60), o('ne', 20)],
+        tip: 'Vstávejte každý den ve stejný čas, i o víkendu.' },
+  S4: { label: 'Díváte se poslední hodinu před spaním na obrazovku?', opts: [o('skoro nikdy', 100), o('někdy', 60), o('každý večer', 20)],
+        tip: 'Poslední hodinu před spaním nechte telefon mimo ložnici.' },
+  S5: { label: 'Máte někoho blízkého, s kým sdílíte starosti a pravidelně se vídáte?', opts: [o('ano', 100), o('spíš ano', 65), o('spíš ne', 25)],
+        tip: 'Domluvte si pravidelné setkání s blízkým člověkem, třeba týdenní procházku.' },
+  S6: { label: 'Kolik hodin týdně pracujete?', opts: [o('do 40', 100), o('41–50', 65), o('přes 50', 25)],
+        tip: 'Aspoň 3× týdně si stanovte pevný konec pracovního dne.' },
+  H0: { label: 'Která situace vás nejlépe vystihuje?',
+        opts: [o('Menstruuji pravidelně, bez hormonální antikoncepce', null), o('Menstruuji nepravidelně', null), o('Užívám hormonální antikoncepci', null),
+               o('Menstruaci nemám déle než 12 měsíců', null), o('Jsem těhotná nebo kojím', null)] },
+  H1: { label: 'Jak dlouhý je váš cyklus?', opts: [o('21–35 dní, předvídatelně', 0), o('Kratší než 21 dní', 2), o('Delší než 35 dní', 3), o('Nepředvídatelný, nebo méně než 8 menstruací ročně', 3)] },
+  H2: { label: 'Máte nadměrné ochlupení na bradě, horním rtu, hrudi nebo břiše?', opts: [o('ne', 0), o('mírně', 1), o('výrazně', 2)] },
+  H3: { label: 'Máte akné v dospělosti, hlavně na bradě a čelisti?', opts: [o('ne', 0), o('občas', 1), o('často', 2)] },
+  H4: { label: 'Řídnou vám vlasy na temeni nebo vám víc padají?', opts: [o('ne', 0), o('mírně', 1), o('výrazně', 2)] },
+  H5: { label: 'Máte tmavší, sametovou kůži na krku nebo v podpaží?', opts: [o('ne', 0), o('ano', 2), o('nevím', 0)] },
+  H6: { label: 'Přibíráte hlavně na břiše a hubnutí nejde ani přes snahu?', opts: [o('ne', 0), o('ano', 1)] },
+  H7: { label: 'Užíváte antikoncepci kvůli akné, ochlupení nebo nepravidelnému cyklu?', opts: [o('ne', 0), o('ano', 2)] },
+  THY: { label: 'Týká se vás něco z toho?', multi: true, none: 'Nic z toho',
+         opts: ['Únava i po dostatečném spánku', 'Zimomřivost', 'Suchá kůže nebo padání vlasů', 'Zácpa', 'Přibírání bez změny jídelníčku'] },
+  P1: { label: 'Kouříte nebo vapujete?', opts: [o('nikdy', 100), o('dříve ano', 75), o('příležitostně', 35), o('denně', 0)], w: .25,
+        tip: 'Přestat kouřit je nejsilnější jednotlivý krok pro dlouhověkost. Rádi vám s tím pomůžeme.' },
+  P2: { label: 'Kdy jste byla naposledy na preventivní prohlídce u praktického lékaře?', opts: [o('do 2 let', 100), o('déle', 40), o('nepamatuji si', 25)], w: .15,
+        tip: 'Objednejte se na preventivní prohlídku k praktickému lékaři.' },
+  P3: { label: 'Měla jste za posledních 12 měsíců krevní testy?', opts: [o('ano', 100), o('ne', 40)], w: .15,
+        tip: 'Nechte si zkontrolovat krev a metabolické parametry, ideálně v rámci vstupní diagnostiky.' },
+  P4: { label: 'Byla jste za poslední rok na preventivní gynekologické prohlídce?', hint: 'Od 45 let i na mamografii.', opts: [o('ano', 100), o('ne', 35)], w: .15,
+        tip: 'Objednejte se na preventivní gynekologickou prohlídku.' },
+  P5: { label: 'Vyskytuje se u vašich rodičů nebo sourozenců?', multi: true, none: 'Nic z toho',
+        opts: ['Diabetes 2. typu', 'Infarkt nebo mrtvice před 60 lety', 'Rakovina prsu, vaječníků nebo střeva', 'Osteoporóza', 'Onemocnění štítné žlázy'] },
+  P6: { label: 'Máte některou z těchto diagnóz?', multi: true, none: 'Nic z toho',
+        opts: ['Vysoký krevní tlak', 'Vysoký cholesterol', 'Prediabetes nebo diabetes', 'Onemocnění štítné žlázy', 'PCOS / PMOS', 'Autoimunitní onemocnění'] },
+  ANAM: { label: 'Týká se vás něco z toho?', hint: 'Důležité pro bezpečné nastavení péče. Údaje vidí jen lékař kliniky.', multi: true, none: 'Nic z toho',
+          opts: ['Prodělaný zánět slinivky břišní (pankreatitida)', 'MEN 1/2 nebo medulární karcinom štítné žlázy v rodině', 'Porucha příjmu potravy (nyní nebo dříve)',
+                 'Onemocnění žlučníku', 'Onemocnění ledvin nebo jater', 'Kardiostimulátor nebo defibrilátor'] },
+  GLP: { label: 'Užíváte nebo jste užívala léky na regulaci hmotnosti?', opts: [o('ne', null), o('ano, užívám', null), o('ano, dříve', null)] },
+  BPF: { label: 'Jaký míváte krevní tlak?', opts: [o('normální', 80), o('nízký', 70), o('vysoký', 30), o('nevím', 50)] }
+};
+const PERI = [
+  ['PM1', 'Návaly horka nebo noční pocení'], ['PM2', 'Změna délky nebo síly menstruace za poslední rok'], ['PM3', 'Zhoršený spánek'],
+  ['PM4', 'Výkyvy nálad, podrážděnost'], ['PM5', 'Mlha v hlavě, zapomínání'], ['PM6', 'Bolesti kloubů a svalů'], ['PM7', 'Pokles libida'], ['PM8', 'Přibírání na břiše']
+];
+PERI.forEach(([id, label]) => { Q[id] = { pre: 'Jak moc vás v poslední době trápí', label, opts: [o('vůbec', 0), o('mírně', 1), o('středně', 2), o('výrazně', 3)], peri: true }; });
+
+const menstruating = () => S.a.H0 === 0 || S.a.H0 === 1;
+const onHAK = () => S.a.H0 === 2;
+const menopause = () => S.a.H0 === 3;
+function hormonalItems() {
+  const h = S.a.H0; if (h == null || h === 4) return [];
+  const list = [];
+  if (!menopause()) { if (menstruating()) list.push('H1'); list.push('H2', 'H3', 'H4', 'H5', 'H6'); if (onHAK()) list.push('H7'); }
+  if ((age() ?? 0) >= 38 || menopause()) PERI.forEach(([id]) => { if (id === 'PM2' && !menstruating()) return; list.push(id); });
+  list.push('THY');
+  return list;
+}
+function preventionItems() { const l = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6']; if (!hasBP()) l.push('BPF'); l.push('ANAM', 'GLP'); return l; }
+
+/* ---------- sections & steps ---------- */
+const SECS = ['measure', 'basics', 'movement', 'nutrition', 'mind', 'recovery', 'slow', 'hormonal', 'prevention'];
+const SEC = {
+  measure:    { lbl: 'Měření', eyebrow: 'Krok 01 — Měření', title: 'Tlak, tep<br>a složení těla' },
+  basics:     { lbl: 'Základ', eyebrow: 'Krok 02 — Základ', title: 'Pár<br>základních údajů' },
+  movement:   { lbl: 'Movement', eyebrow: 'Pilíř 01 — Movement', title: 'Pohyb<br>a síla', lead: 'Svalová hmota a kondice patří k nejsilnějším ukazatelům zdravého stárnutí.', items: ['M1', 'M2', 'M3', 'M4', 'M5'] },
+  nutrition:  { lbl: 'Nutrition', eyebrow: 'Pilíř 02 — Nutrition', title: 'Jídlo<br>jako palivo', lead: 'Stabilní hladina cukru a kvalitní bílkoviny jsou základ energie i hormonální rovnováhy.', items: ['N1', 'N2', 'N3', 'N4', 'N5', 'N6'] },
+  mind:       { lbl: 'Mind', eyebrow: 'Pilíř 03 — Mind', title: 'Klidná<br>mysl', lead: 'Mozek, stres a nervový systém jsou biologické faktory dlouhověkosti.', items: ['PSS1', 'PSS2', 'PSS3', 'PSS4', 'Mi2', 'Mi3'] },
+  recovery:   { lbl: 'Recovery', eyebrow: 'Pilíř 04 — Recovery', title: 'Spánek<br>a regenerace', lead: 'Tělo se adaptuje a opravuje ve chvílích, kdy odpočívá.', items: ['R1', 'R2', 'R3', 'R4', 'R5'] },
+  slow:       { lbl: 'Slow living', eyebrow: 'Pilíř 05 — Slow living', title: 'Luxus<br>času', lead: 'Světlo, rytmus dne a vztahy ovlivňují regeneraci víc, než se zdá.', items: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'] },
+  hormonal:   { lbl: 'Hormony', eyebrow: 'Hormonální rovnováha', title: 'Cyklus<br>a hormony', lead: 'Hledáme signály, kterým se vyplatí věnovat pozornost. Nejde o diagnózu, tu potvrdí jen laboratoř.' },
+  prevention: { lbl: 'Prevention', eyebrow: 'Pilíř 06 — Prevention', title: 'Zdraví<br>řízené daty', lead: 'Poslední část. Prevence, rodinná anamnéza a bezpečnost.' }
+};
+const STRIP_Q = ['movement', 'nutrition', 'mind', 'recovery', 'slow', 'hormonal', 'prevention'];
+const STRIP_NAME = { movement: 'MOVEMENT', nutrition: 'NUTRITION', mind: 'MIND', recovery: 'RECOVERY', slow: 'SLOW LIVING', hormonal: 'HORMONAL', prevention: 'PREVENTION' };
+
+function sectionItems(sec) {
+  if (sec === 'hormonal') return ['H0', ...hormonalItems()];
+  if (sec === 'prevention') return preventionItems();
+  return SEC[sec].items;
+}
+function buildSteps() {
+  const st = [{ key: 'intro' }, { key: 'about' }, { key: 'measure', sec: 'measure' }, { key: 'basics', sec: 'basics' }];
+  STRIP_Q.forEach(sec => { const items = sectionItems(sec); items.forEach((id, i) => st.push({ key: 'q:' + id, id, sec, i, n: items.length })); });
+  st.push({ key: 'generating' }, { key: 'result' });
+  return st;
+}
+function curIndex(steps) { const i = steps.findIndex(s => s.key === S.cur); return i < 0 ? 0 : i; }
+const curStep = () => { const st = buildSteps(); return st[curIndex(st)]; };
+
+/* ---------- background ---------- */
+const WAVES = {
+  hero: `<svg class="wave" viewBox="0 0 1920 1080" preserveAspectRatio="xMaxYMax slice">
+    <path d="M1640 -60 C1720 190 1560 440 1310 575 C1170 650 1060 700 890 735 C740 768 640 880 560 1140 L1990 1140 L1990 -60 Z" fill="url(#waveG)" filter="url(#soft)"/>
+    <path d="M1890 -80 C1960 180 1860 380 1700 470 C1620 515 1560 520 1500 505 C1640 400 1740 220 1700 -80 Z" fill="#19191B" opacity="0.55" filter="url(#softer)"/>
+    <rect x="1150" y="-60" width="860" height="720" fill="url(#waveShade)"/></svg><div class="veil"></div>`,
+  gen: `<svg class="wave" viewBox="0 0 1920 1080" preserveAspectRatio="xMaxYMax slice">
+    <path d="M1520 -60 C1640 160 1500 390 1250 520 C1100 600 980 660 820 700 C660 740 560 860 480 1140 L1990 1140 L1990 -60 Z" fill="url(#waveG)" filter="url(#soft)"/>
+    <rect x="1100" y="-60" width="900" height="760" fill="url(#waveShade)"/></svg><div class="veil"></div>`
+};
+const GLOWS = [
+  `<div class="glow" style="right:-16vw;bottom:-30vh;width:60vw;height:80vh;background:radial-gradient(closest-side,rgba(36,131,197,.5),rgba(122,62,158,.32) 55%,rgba(25,25,27,0))"></div>`,
+  `<div class="glow" style="right:-18vw;top:-36vh;width:58vw;height:80vh;background:radial-gradient(closest-side,rgba(122,62,158,.42),rgba(36,131,197,.22) 60%,rgba(25,25,27,0))"></div>`,
+  `<div class="glow" style="left:-22vw;bottom:-40vh;width:58vw;height:80vh;background:radial-gradient(closest-side,rgba(142,60,156,.4),rgba(36,131,197,.18) 60%,rgba(25,25,27,0))"></div>`
+];
+let bgKey = '';
+function setBg(key) {
+  if (key === bgKey) return; bgKey = key;
+  $('#bg').innerHTML = key === 'hero' ? WAVES.hero : key === 'gen' ? WAVES.gen : key === 'result'
+    ? `<div class="glow" style="right:-10vw;top:-20vh;width:64vw;height:100vh;background:radial-gradient(closest-side,rgba(36,131,197,.26),rgba(122,62,158,.18) 60%,rgba(25,25,27,0))"></div>`
+    : GLOWS[+key.slice(1) % GLOWS.length];
+}
+
+/* ---------- header / footer ---------- */
+const LOGO = big => `<div class="logo${big ? ' big' : ''}" aria-label="Aeternum Clinic">${icon('logoMark')}<div class="wm"><b>AETERNUM</b><span>CLINIC</span></div></div>`;
+const CONTACTS = `<nav class="contacts" aria-label="Kontakt">
+  <a href="tel:${CFG.phone}" aria-label="Zavolat klinice"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M8.7 6.4c.45-.32 1.07-.2 1.37.26l1.1 1.7c.28.43.18 1-.22 1.3l-.82.62c.55 1.25 1.53 2.27 2.76 2.87l.63-.8c.31-.4.88-.49 1.3-.2l1.7 1.13c.45.3.56.93.23 1.36l-.72.97c-.5.66-1.37.94-2.15.66-3.05-1.08-5.45-3.5-6.5-6.56-.27-.78.02-1.64.7-2.12z" fill="#19191B"/></svg></a>
+  <a href="mailto:${CFG.email}" aria-label="Napsat e-mail"><svg viewBox="0 0 24 24"><rect x="1.5" y="5" width="21" height="14" rx="1" fill="#fff"/><path d="M2 5.6l10 7.2 10-7.2" stroke="#19191B" stroke-width="1.6" fill="none"/></svg></a>
+  <a href="${CFG.mapUrl}" target="_blank" rel="noopener" aria-label="Kde nás najdete"><svg viewBox="0 0 24 24"><path d="M12 1.5a7.5 7.5 0 0 0-7.5 7.5c0 5.4 7.5 13.5 7.5 13.5s7.5-8.1 7.5-13.5A7.5 7.5 0 0 0 12 1.5z" fill="#fff"/><circle cx="12" cy="9" r="2.7" fill="#19191B"/></svg></a></nav>`;
+function progressHTML(sec) {
+  const i = SECS.indexOf(sec);
+  return `<div class="top-actions"><div class="prog"><span class="lbl"><b>${SEC[sec].lbl.toUpperCase()}</b> · ${String(i + 1).padStart(2, '0')} / ${String(SECS.length).padStart(2, '0')}</span>
+    ${segsHTML(SECS.length, i)}</div></div>`;
+}
+/* segmentový ukazatel: jeden souvislý gradient přes všechny čárky (fialová → modrá) */
+const GRAD_FROM = [122, 62, 158], GRAD_TO = [47, 134, 204];
+const gradAt = t => `rgb(${GRAD_FROM.map((c, k) => Math.round(c + (GRAD_TO[k] - c) * t)).join(',')})`;
+function segsHTML(n, upTo) {
+  return `<div class="segs">${Array.from({ length: n }, (_, j) => j <= upTo
+    ? `<i class="on" style="background:linear-gradient(90deg,${gradAt(j / n)},${gradAt((j + 1) / n)})"></i>`
+    : '<i></i>').join('')}</div>`;
+}
+function stripHTML(cur, all) {
+  const order = all ? ['movement', 'nutrition', 'mind', 'recovery', 'prevention', 'slow', 'hormonal'] : STRIP_Q;
+  return `<div class="strip ${all ? 'all' : 'qs'}" aria-hidden="true">${order.map((k, i) => (i ? '<span>—</span>' : '') + (k === cur ? `<b>${STRIP_NAME[k]}</b>` : `<span>${STRIP_NAME[k]}</span>`)).join('')}</div>`;
+}
+const BACK = `<button type="button" class="round" data-act="back" aria-label="Zpět">${icon('i-back')}</button>`;
+
+/* ---------- field helpers ---------- */
+function uf(key, label, { store = 'm', type = 'number', unit = '', size = '', optional = false, placeholder = '', inputmode = 'decimal', min, max, autocomplete = 'off' } = {}) {
+  const val = (store === 'm' ? S.m : S.a)[key] ?? '';
+  return `<div class="uf ${size}" id="w-${key}"><label for="f-${key}">${esc(label)}${unit ? ` <em>· ${esc(unit)}</em>` : ''}${optional ? ' <em>· nepovinné</em>' : ''}</label>
+    <input id="f-${key}" data-store="${store}" data-key="${key}" type="${type}" inputmode="${inputmode}" autocomplete="${autocomplete}" placeholder="${esc(placeholder)}" value="${esc(val)}"${min != null ? ` min="${min}"` : ''}${max != null ? ` max="${max}"` : ''}></div>`;
+}
+const cbox = (id, checked, html, attr = '') => `<label class="cbox"><input type="checkbox" id="${id}" ${attr} ${checked ? 'checked' : ''}><span class="box">${icon('i-check')}</span><span>${html}</span></label>`;
+const leftCol = (sec, extra = '') => `<div><span class="eyebrow">${SEC[sec].eyebrow}</span><h1 class="h-xl">${SEC[sec].title}</h1>${SEC[sec].lead ? `<p class="lead" style="margin-top:clamp(18px,calc(1.8*var(--u)),calc(34px*var(--k)))">${esc(SEC[sec].lead)}</p>` : ''}${extra}</div>`;
+
+/* ---------- render ---------- */
+let autoT = null;
+function render() {
+  clearTimeout(autoT);
+  const steps = buildSteps(); const idx = curIndex(steps); const st = steps[idx];
+  S.cur = st.key;
+  const top = $('#top'), main = $('#main'), foot = $('#foot');
+  foot.className = 'foot';
+  let T = '', M = '', F = '';
+
+  if (st.key === 'intro') {
+    setBg('hero');
+    T = LOGO(true) + CONTACTS;
+    M = `<div class="intro"><h1 class="h-hero">Aeternum Longevity<br><span class="light">Snapshot</span></h1>
+      <p class="body-wide">Za zhruba 8 minut vyhodnotíme šest pilířů dlouhověkosti a vaši hormonální rovnováhu. Výsledek dostanete hned a připravíme ho pro vaši konzultaci.</p>
+      <i class="bar"></i><button type="button" class="btn pri" data-act="next">Spustit test</button></div>`;
+    F = stripHTML(null, true);
+  } else if (st.key === 'about') {
+    setBg('g1');
+    T = LOGO() + `<div class="top-actions"><button class="linkbtn" data-act="restart" type="button">Zpět na úvod</button></div>`;
+    const today = new Date(); const maxDob = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()).toISOString().slice(0, 10);
+    M = `<div class="split"><div><span class="eyebrow">Než začneme</span><h1 class="h-xl">Kam pošleme<br>výsledek</h1>
+        <p class="lead" style="margin-top:clamp(18px,calc(1.8*var(--u)),calc(34px*var(--k)))">Datum narození potřebujeme k vyhodnocení podle věku. Na e-mail vám pošleme váš Snapshot.</p></div>
+      <div><div class="ufrow two">${uf('firstName', 'Křestní jméno', { store: 'a', type: 'text', inputmode: 'text', placeholder: 'Jana', autocomplete: 'given-name' })}
+        ${uf('dob', 'Datum narození', { store: 'a', type: 'date', inputmode: 'numeric', min: '1920-01-01', max: maxDob, autocomplete: 'bday' })}</div>
+        <div class="ufrow one" style="margin-top:clamp(24px,calc(2.3*var(--u)),calc(44px*var(--k)))">${uf('email', 'E-mail pro zaslání výsledku', { store: 'a', type: 'email', inputmode: 'email', placeholder: 'jana@email.cz', autocomplete: 'email' })}</div>
+        <div class="consents">
+          ${cbox('c-gdpr', S.a.gdpr, 'Souhlasím se zpracováním svých osobních údajů, včetně údajů o zdravotním stavu, které v dotazníku uvedu nebo nahraji, společností My Design Creatives s.r.o., IČO 07162235, se sídlem Pod Harfou 943/34, 190 00 Praha 9, provozující Aeternum Clinic, za účelem vyhodnocení Aeternum Longevity Snapshot a jeho zaslání na můj e-mail. Údaje mohou být v pseudonymizované podobě zpracovány nástroji umělé inteligence. Souhlas mohu kdykoli odvolat na info@aeternumclinic.cz.', 'data-consent="gdpr"')}
+          ${cbox('c-marketing', S.a.marketing, 'Chci e-mailem dostávat tipy k longevity a nabídky Aeternum Clinic. Odhlásit se mohu jedním kliknutím. <em>(nepovinné)</em>', 'data-consent="marketing"')}
+        </div></div></div>`;
+    F = navHTML(true);
+  } else if (st.key === 'measure') {
+    setBg('g0');
+    T = LOGO() + progressHTML('measure');
+    const mOpts = ['pod rozsahem', 'v rozsahu', 'nad rozsahem', 'nevím'];
+    M = `<div class="split">${leftCol('measure', `<p class="lead" style="margin-top:clamp(18px,calc(1.8*var(--u)),calc(34px*var(--k)))">Zadejte hodnoty z tlakoměru a nahrajte report z chytré váhy. Nemáte je u sebe? Tento krok můžete přeskočit.</p>
+        <p class="tip">Doma měřte tlak po 5 minutách v klidu vsedě, dvakrát minutu po sobě, a zadejte druhé měření.</p>`)}
+      <div>
+        <div class="ufrow" style="--cols:3">
+          <div class="uf big" id="w-sys"><span class="lab">Krevní tlak <em>· mmHg</em></span><div class="bp">
+            <input id="f-sys" data-store="m" data-key="sys" type="number" inputmode="numeric" placeholder="120" aria-label="Systolický tlak" value="${esc(S.m.sys ?? '')}">
+            <span>/</span><input id="f-dia" data-store="m" data-key="dia" type="number" inputmode="numeric" placeholder="80" aria-label="Diastolický tlak" value="${esc(S.m.dia ?? '')}"></div></div>
+          ${uf('pulse', 'Tep', { unit: '/min', size: 'big', placeholder: '68', inputmode: 'numeric' })}
+          ${uf('grip', 'Stisk', { unit: 'kg', size: 'big', placeholder: '28' })}
+        </div>
+        <label class="upload" for="f-report" style="margin-top:clamp(28px,calc(2.7*var(--u)),calc(52px*var(--k)))">
+          <span class="ic">${icon('i-doc')}</span>
+          <span class="tx"><b>${S.m.fileName ? esc(S.m.fileName) : 'Nahrát report z váhy'}</b>${uploadStatusHTML()}</span>
+          <span class="btn ghost sm">${S.m.fileName ? 'Nahrát jiný' : 'Vybrat soubor'}</span>
+          <input id="f-report" type="file" accept="application/pdf,image/*"${S.m.upload === 'reading' ? ' disabled' : ''}></label>
+        ${(S.m.reportWarn || []).map(w => `<p class="tip" style="color:var(--warn)">${esc(w)}</p>`).join('')}
+        <div class="ufrow four" style="margin-top:clamp(26px,calc(2.4*var(--u)),calc(46px*var(--k)))">
+          ${uf('rWeight', 'Hmotnost', { unit: 'kg', size: 'mid', placeholder: '68' })}
+          ${uf('fat', 'Tuk', { unit: '%', size: 'mid', placeholder: '28' })}
+          ${uf('visc', 'Viscerální', { size: 'mid', placeholder: '7' })}
+          ${uf('metAge', 'Metab. věk', { size: 'mid', placeholder: '38', inputmode: 'numeric' })}
+        </div>
+        <div style="margin-top:clamp(22px,calc(1.9*var(--u)),calc(36px*var(--k)))"><span class="small-caps">Svalová hmota vůči rozsahu na reportu</span>
+          <div class="minipills">${mOpts.map((l, i) => `<button type="button" class="minipill" data-muscle="${i}" aria-pressed="${S.m.muscle === i}">${l}</button>`).join('')}</div></div>
+      </div></div>`;
+    F = navHTML(true, `<button type="button" class="btn ghost" data-act="skip">Teď to nemám u sebe</button>`);
+  } else if (st.key === 'basics') {
+    setBg('g1');
+    const rw = num(S.m.rWeight);
+    if (rw != null && (S.a.weight == null || S.a.weight === '')) S.a.weight = String(rw);
+    if (S.m.reportHeight != null && (S.a.height == null || S.a.height === '')) S.a.height = String(Math.round(S.m.reportHeight));
+    T = LOGO() + progressHTML('basics');
+    M = `<div class="split">${leftCol('basics', `<p class="lead" style="margin-top:clamp(18px,calc(1.8*var(--u)),calc(34px*var(--k)))">Z výšky a váhy spočítáme BMI. Obvod pasu zpřesní odhad tuku v oblasti břicha.</p>${rw != null ? '<p class="tip">Výšku a váhu jsme předvyplnili z reportu.</p>' : ''}${heightMismatchHTML()}`)}
+      <div><div class="ufrow" style="--cols:3">
+        ${uf('height', 'Výška', { store: 'a', unit: 'cm', size: 'big', placeholder: '168', inputmode: 'numeric' })}
+        ${uf('weight', 'Váha', { store: 'a', unit: 'kg', size: 'big', placeholder: '65' })}
+        ${uf('waist', 'Pas', { store: 'a', unit: 'cm', size: 'big', placeholder: '78', optional: true })}
+      </div><p class="tip">Obvod pasu měřte v úrovni pupku, po výdechu.</p></div></div>`;
+    F = navHTML(true);
+  } else if (st.key.startsWith('q:')) {
+    const secIdx = STRIP_Q.indexOf(st.sec);
+    setBg('g' + (secIdx % 3));
+    T = LOGO() + progressHTML(st.sec);
+    const counter = `<div class="qcount"><span class="small-caps">Otázka ${st.i + 1} / ${st.n}</span>${segsHTML(st.n, st.i)}</div>`;
+    M = `<div class="split">${leftCol(st.sec, counter)}<div>${questionHTML(st.id)}</div></div>`;
+    const q = Q[st.id];
+    const answered = q.multi ? isMultiAnswered(st.id) : S.a[st.id] != null;
+    F = navHTML(q.multi || answered, '', !(q.multi || answered)) + stripHTML(st.sec, false);
+  } else if (st.key === 'generating') {
+    setBg('gen');
+    T = LOGO();
+    M = `<div class="split" style="align-items:center"><div><span class="eyebrow">Vyhodnocujeme</span>
+        <h1 class="h-hero" style="margin-top:clamp(14px,calc(1.2*var(--u)),calc(22px*var(--k)))">Připravujeme<br><span class="light">váš Snapshot</span></h1>
+        <p class="lead gen-status" id="genStatus" aria-live="polite" style="margin-top:clamp(16px,calc(1.4*var(--u)),calc(26px*var(--k)))">${GEN_MESSAGES[0]}</p>
+        <div class="genbar" aria-hidden="true"><i id="genBar"></i></div>
+        <div class="checks" id="checks">${STRIP_Q.map(k => `<div data-k="${k}"><span class="ic">${icon('i-check')}</span>${STRIP_NAME[k]}</div>`).join('')}</div></div>
+      <div class="ringwrap"><svg viewBox="0 0 520 520" aria-hidden="true"><circle cx="260" cy="260" r="236" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="10"/>
+        <circle id="arc" cx="260" cy="260" r="236" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-dasharray="1482.8" stroke-dashoffset="1482.8" transform="rotate(-90 260 260)"/>
+        <g class="orbit"><circle cx="260" cy="24" r="6" fill="#fff"/></g>
+        <text id="ringTxt" x="260" y="286" text-anchor="middle" font-family="Montserrat, system-ui, sans-serif" font-size="104" font-weight="200" fill="#fff">0 %</text>
+        <text x="260" y="340" text-anchor="middle" font-family="Montserrat, system-ui, sans-serif" font-size="17" font-weight="600" letter-spacing="5" fill="rgba(255,255,255,.75)">HOTOVO</text></svg></div></div>`;
+  } else if (st.key === 'result') {
+    setBg('result');
+    T = LOGO() + `<div class="top-actions">${CFG.kiosk ? '' : '<button type="button" class="btn ghost sm" data-act="pdf" id="pdfBtn">Stáhnout PDF</button>'}<button class="linkbtn" type="button" data-act="restart">Nový Snapshot</button></div>`;
+    M = '';
+  }
+
+  top.innerHTML = T;
+  foot.innerHTML = F;
+  if (['about', 'measure', 'basics'].includes(st.key) || st.key.startsWith('q:')) foot.classList.add('sticky');
+  const app = $('#app');
+  if (st.key === 'result') {
+    main.style.display = 'none';
+    app.querySelectorAll('.rsec,.disclaimer').forEach(n => n.remove());
+    foot.insertAdjacentHTML('beforebegin', renderResult());
+  } else {
+    main.style.display = '';
+    app.querySelectorAll('.rsec,.disclaimer').forEach(n => n.remove());
+    main.innerHTML = `<div class="screen">${M}</div>`;
+  }
+  if (st.key === 'generating') runGenerating();
+  if (st.key === 'result') { ensureSubmitted().catch(() => {}); if (S.payment) showPaymentQr(); }
+  save();
+}
+
+function navHTML(showNext, extra = '', hideNext = false) {
+  return `<div class="navrow">${BACK}<span class="err" id="err" role="alert"></span>
+    <div class="nav-right">${extra}${hideNext ? '' : `<button type="button" class="btn pri" data-act="next">Pokračovat</button>`}</div></div>`;
+}
+function isMultiAnswered(id) { const v = S.a[id]; return v === 'none' || (Array.isArray(v) && v.length > 0); }
+
+function questionHTML(id) {
+  const q = Q[id];
+  let h = q.pre ? `<p class="small-caps qpre">${esc(q.pre)}</p>` : '';
+  h += `<p class="qtext${q.label.length > 75 ? ' long' : ''}" id="qtext">${esc(q.label)}</p>`;
+  if (q.hint) h += `<p class="qhint">${esc(q.hint)}</p>`;
+  if (q.multi) {
+    const v = S.a[id];
+    h += `<div class="rows${q.opts.length >= 5 ? ' cols2' : ''}" role="group" aria-labelledby="qtext">${q.opts.map((l, i) => `<button type="button" class="rowopt multi" data-multi="${id}" data-i="${i}" aria-pressed="${Array.isArray(v) && v.includes(i)}"><span class="mark">${icon('i-check')}</span>${esc(l)}</button>`).join('')}
+      <button type="button" class="rowopt multi" data-multi="${id}" data-i="none" aria-pressed="${v === 'none'}"><span class="mark">${icon('i-check')}</span>${esc(q.none)}</button></div>
+      <p class="small-caps autohint">Vyberte vše, co platí</p>`;
+    return h;
+  }
+  const v = S.a[id];
+  const pills = q.scale || q.chips || (q.opts.length <= 5 && q.opts.every(x => x.label.length <= 12) && !(q.opts.length === 5 && !q.scale));
+  if (pills) {
+    h += `<div class="opts${q.chips ? ' sm' : ''}" role="group" aria-labelledby="qtext">${q.opts.map((x, i) => `<button type="button" class="opt" data-single="${id}" data-i="${i}" aria-pressed="${v === i}">${esc(x.label)}</button>`).join('')}</div>`;
+    if (q.scale) h += `<div class="scale-ends small-caps"><span>${esc(q.scale[0])}</span><span>${esc(q.scale[1])}</span></div>`;
+  } else {
+    h += `<div class="rows" role="group" aria-labelledby="qtext">${q.opts.map((x, i) => `<button type="button" class="rowopt" data-single="${id}" data-i="${i}" aria-pressed="${v === i}"><span class="mark"></span>${esc(x.label)}</button>`).join('')}</div>`;
+  }
+  if (id === 'H0' && pregnant()) h += `<p class="tip">V těhotenství a při kojení hormonální část vynecháme a složení těla nebudeme hodnotit.</p>`;
+  return h;
+}
+
+/* ---------- navigation ---------- */
+function go(dir) {
+  const steps = buildSteps(); const idx = curIndex(steps); const st = steps[idx];
+  if (dir > 0) {
+    const err = validate(st);
+    if (err) { showErr(err); return; }
+    if (st.key === 'measure') S.measSkipped = !hasBP() && !hasReport();
+  }
+  const steps2 = buildSteps();
+  const i2 = Math.max(0, Math.min(steps2.length - 1, curIndex(steps2) + dir));
+  if (steps2[i2].key === 'generating' && dir < 0) return;
+  S.cur = steps2[i2].key;
+  render(); window.scrollTo(0, 0);
+}
+function showErr(err) {
+  const el = $('#err'); if (el) el.textContent = err.msg;
+  if (err.focus) {
+    const w = document.getElementById('w-' + err.focus); const f = document.getElementById('f-' + err.focus);
+    if (w) w.classList.add('invalid');
+    if (f) { f.scrollIntoView({ behavior: 'smooth', block: 'center' }); f.focus({ preventScroll: true }); }
+  }
+}
+function rangeErr(store, key, min, max, label, required, wrap) {
+  const raw = (store === 'm' ? S.m : S.a)[key]; const v = num(raw);
+  if (raw == null || raw === '') return required ? { msg: `Vyplňte prosím: ${label}.`, focus: wrap || key } : null;
+  if (v == null || v < min || v > max) return { msg: `${label}: zadejte hodnotu mezi ${min} a ${max}.`, focus: wrap || key };
+  return null;
+}
+function validate(st) {
+  if (st.key === 'about') {
+    if (!S.a.firstName || !S.a.firstName.trim()) return { msg: 'Vyplňte prosím křestní jméno.', focus: 'firstName' };
+    const a = age(); if (a == null) return { msg: 'Vyplňte prosím datum narození.', focus: 'dob' };
+    if (a < 18 || a > 100) return { msg: 'Snapshot je určen pro dospělé od 18 let.', focus: 'dob' };
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((S.a.email || '').trim())) return { msg: 'Zadejte prosím platný e-mail.', focus: 'email' };
+    if (!S.a.gdpr) return { msg: 'Pro pokračování je potřeba souhlas se zpracováním údajů.' };
+  }
+  if (st.key === 'measure') {
+    const s = S.m.sys, d = S.m.dia;
+    if ((s || d) && !(s && d)) return { msg: 'Zadejte prosím horní i dolní hodnotu tlaku.', focus: s ? 'dia' : 'sys' };
+    return rangeErr('m', 'sys', 70, 250, 'Horní tlak', false, 'sys') || rangeErr('m', 'dia', 40, 150, 'Dolní tlak', false, 'dia') || rangeErr('m', 'pulse', 30, 200, 'Tep')
+      || rangeErr('m', 'grip', 5, 80, 'Síla stisku') || rangeErr('m', 'rWeight', 35, 250, 'Hmotnost') || rangeErr('m', 'fat', 3, 70, 'Procento tuku')
+      || rangeErr('m', 'visc', 1, 30, 'Viscerální tuk') || rangeErr('m', 'metAge', 15, 100, 'Metabolický věk');
+  }
+  if (st.key === 'basics') return rangeErr('a', 'height', 130, 210, 'Výška', true) || rangeErr('a', 'weight', 35, 250, 'Váha', true) || rangeErr('a', 'waist', 50, 180, 'Obvod pasu');
+  if (st.key.startsWith('q:')) {
+    const ok = Q[st.id].multi ? isMultiAnswered(st.id) : S.a[st.id] != null;
+    if (!ok) return { msg: Q[st.id].multi ? 'Vyberte prosím aspoň jednu možnost.' : 'Vyberte prosím odpověď.' };
+  }
+  return null;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const act = b.dataset.act;
+  if (act === 'next') { go(1); return; }
+  if (act === 'back') { go(-1); return; }
+  if (act === 'skip') { S.m = {}; S.measSkipped = true; S.cur = 'basics'; render(); window.scrollTo(0, 0); return; }
+  if (act === 'restart') { if (CFG.kiosk || S.cur === 'about' || confirm('Opravdu začít znovu? Vyplněné odpovědi se smažou.')) resetAll(); return; }
+  if (act === 'pdf') { downloadPdf(b); return; }
+  if (act === 'resubmit') { submitPromise = null; ensureSubmitted().catch(() => {}); return; }
+  if (b.dataset.single) { pickSingle(b.dataset.single, +b.dataset.i); return; }
+  if (b.dataset.multi) {
+    const id = b.dataset.multi;
+    if (b.dataset.i === 'none') S.a[id] = S.a[id] === 'none' ? undefined : 'none';
+    else { const i = +b.dataset.i; let sel = Array.isArray(S.a[id]) ? S.a[id].slice() : []; sel = sel.includes(i) ? sel.filter(x => x !== i) : [...sel, i]; S.a[id] = sel.length ? sel : undefined; }
+    const v = S.a[id];
+    b.parentElement.querySelectorAll('.rowopt').forEach(c => c.setAttribute('aria-pressed', c.dataset.i === 'none' ? v === 'none' : (Array.isArray(v) && v.includes(+c.dataset.i))));
+    const err = $('#err'); if (err) err.textContent = ''; save(); return;
+  }
+  if (b.dataset.muscle != null) {
+    const i = +b.dataset.muscle; S.m.muscle = S.m.muscle === i ? undefined : i;
+    b.parentElement.querySelectorAll('.minipill').forEach(c => c.setAttribute('aria-pressed', S.m.muscle === +c.dataset.muscle)); save(); return;
+  }
+});
+function pickSingle(id, i) {
+  S.a[id] = i; save();
+  document.querySelectorAll(`[data-single="${id}"]`).forEach(c => c.setAttribute('aria-pressed', +c.dataset.i === i));
+  const err = $('#err'); if (err) err.textContent = '';
+  clearTimeout(autoT);
+  autoT = setTimeout(() => { if (S.cur === 'q:' + id) go(1); }, CFG.autoAdvanceMs);
+}
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset && t.dataset.key) {
+    (t.dataset.store === 'm' ? S.m : S.a)[t.dataset.key] = t.value;
+    const w = t.closest('.uf'); if (w) w.classList.remove('invalid');
+    const err = $('#err'); if (err) err.textContent = ''; save();
+  }
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset && t.dataset.consent) { S.a[t.dataset.consent] = t.checked; save(); }
+  if (t.id === 'f-report' && t.files && t.files[0]) handleReport(t.files[0]);
+  if (t.id === 'ctaOpen') { S.cta.open = t.checked; rerenderCTA(); }
+  if (t.id === 'ctaConsent') { S.a.ctaConsent = t.checked; save(); }
+});
+document.addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const st = curStep();
+  const inField = e.target.matches && e.target.matches('input');
+  if (st.key.startsWith('q:') && !inField && /^[1-9]$/.test(e.key)) {
+    const q = Q[st.id]; const i = +e.key - 1;
+    if (!q.multi && q.opts[i]) { e.preventDefault(); pickSingle(st.id, i); }
+    else if (q.multi) { const btn = document.querySelectorAll(`[data-multi="${st.id}"]`)[i]; if (btn) { e.preventDefault(); btn.click(); } }
+    return;
+  }
+  if (e.key === 'Enter' && !e.target.closest('button') && !['generating', 'result'].includes(st.key)) { e.preventDefault(); go(1); }
+});
+
+/* ==========================================================================
+   SCORING
+   ========================================================================== */
+const W = { prevention: .20, nutrition: .18, movement: .18, recovery: .12, mind: .12, hormonal: .12, slow: .08 };
+const NAMES = { movement: 'Movement', nutrition: 'Nutrition', mind: 'Mind', recovery: 'Recovery', prevention: 'Prevention', slow: 'Slow living', hormonal: 'Hormony' };
+const ORDER = ['movement', 'nutrition', 'mind', 'recovery', 'prevention', 'slow', 'hormonal'];
+
+const sc = id => { const v = S.a[id]; if (v == null || !Q[id].opts[v]) return null; return Q[id].opts[v].score; };
+const hasReport = () => ['fat', 'visc', 'metAge'].some(k => num(S.m[k]) != null) || (S.m.muscle != null && S.m.muscle < 3);
+const bmi = () => { const h = num(S.a.height), w = num(S.a.weight); return h && w ? w / Math.pow(h / 100, 2) : null; };
+function gripScore(kg, a) { if (kg == null || a == null) return null; const n = a < 40 ? [22, 30] : a < 50 ? [21, 29] : a < 60 ? [19, 27] : [17, 24]; return kg < n[0] ? 25 : kg > n[1] ? 100 : 65; }
+function gripBand(kg, a) { const s = gripScore(kg, a); return s == null ? null : s === 25 ? ['nízká', 'warn'] : s === 100 ? ['dobrá', 'good'] : ['průměrná', 'ok']; }
+function bmiScore(b) { if (b == null) return null; if (b < 18.5) return 50; if (b < 25) return 100; if (b < 30) return 65; if (b < 35) return 35; return 15; }
+function fatNorm(a) { return a < 40 ? [32, 38] : a < 60 ? [33, 39] : [35, 41]; }
+function fatScore(f, a) { if (f == null || a == null) return null; const n = fatNorm(a); return f <= n[0] ? 100 : f <= n[1] ? 55 : 20; }
+function viscScore(v) { if (v == null) return null; return v <= 9 ? 100 : v <= 14 ? 45 : 15; }
+function whtrScore(r) { if (r == null) return null; return r < .5 ? 100 : r < .6 ? 55 : 20; }
+function pulseScore(p) { if (p == null) return null; return p < 60 ? 100 : p <= 70 ? 90 : p <= 80 ? 65 : p <= 90 ? 35 : 15; }
+function bpCat(s, d) {
+  const cs = s < 120 ? 0 : s < 130 ? 1 : s < 140 ? 2 : s < 160 ? 3 : s < 180 ? 4 : 5;
+  const cd = d < 70 ? 0 : d < 80 ? 1 : d < 90 ? 2 : d < 100 ? 3 : d < 110 ? 4 : 5;
+  return Math.max(cs, cd);
+}
+const BP_SCORES = [100, 80, 55, 25, 10, 5];
+const BP_LABELS = [['optimální', 'good'], ['normální', 'ok'], ['zvýšený', 'warn'], ['vysoký', 'crit'], ['vysoký', 'crit'], ['výrazně vysoký', 'crit']];
+function metAgeScore(d) { if (d == null) return null; return d <= 0 ? 100 : d <= 5 ? 70 : d <= 10 ? 40 : 20; }
+function multiCount(id) { const v = S.a[id]; return Array.isArray(v) ? v.length : 0; }
+const multiHas = (id, i) => Array.isArray(S.a[id]) && S.a[id].includes(i);
+
+function compute() {
+  const a = age(), preg = pregnant(), B = bmi();
+  const detail = {};
+  const mItems = ['M1', 'M2', 'M3', 'M4', 'M5'];
+  const muscleS = S.m.muscle != null ? [30, 75, 100, null][S.m.muscle] : null;
+  detail.movement = { score: mix(avgW(mItems.map(id => [sc(id), Q[id].w])), avgW([[muscleS, 1], [gripScore(num(S.m.grip), a), 1]]), .7, .3), items: mItems };
+
+  const nItems = ['N1', 'N2', 'N3', 'N4', 'N5', 'N6'];
+  const waist = num(S.a.waist), h = num(S.a.height);
+  const nObj = preg ? null : avgW([[bmiScore(B), .25], [fatScore(num(S.m.fat), a), .35], [viscScore(num(S.m.visc)), .40], [whtrScore(waist && h ? waist / h : null), .25]]);
+  detail.nutrition = { score: mix(avgW(nItems.map(id => [sc(id), 1])), nObj, .6, .4), items: nItems };
+
+  const pss = ['PSS1', 'PSS2', 'PSS3', 'PSS4'].map(sc);
+  const pssSum = pss.every(v => v != null) ? pss.reduce((x, y) => x + y, 0) : null;
+  const pssScore = pssSum == null ? null : pssSum <= 4 ? 100 : pssSum <= 8 ? 70 : pssSum <= 12 ? 40 : 15;
+  detail.mind = { score: avgW([[pssScore, .6], [sc('Mi2'), .2], [sc('Mi3'), .2]]), items: ['Mi2', 'Mi3'], pssSum, pssScore };
+
+  const rItems = ['R1', 'R2', 'R3', 'R4'];
+  detail.recovery = { score: mix(avgW(rItems.map(id => [sc(id), Q[id].w])), pulseScore(num(S.m.pulse)), .8, .2), items: rItems };
+
+  const sItems = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'];
+  detail.slow = { score: avgW(sItems.map(id => [sc(id), 1])), items: sItems };
+
+  const fam = S.a.P5 === 'none' ? 100 : Math.max(40, 100 - 15 * multiCount('P5'));
+  const dx = S.a.P6 === 'none' ? 100 : Math.max(20, 100 - 20 * multiCount('P6'));
+  const pQ = avgW([[sc('P1'), .25], [sc('P2'), .15], [sc('P3'), .15], [sc('P4'), .15], [fam, .15], [dx, .15]]);
+  let bpS = null, bpInfo = null;
+  if (hasBP()) { const c = bpCat(num(S.m.sys), num(S.m.dia)); bpS = BP_SCORES[c]; bpInfo = { cat: c, measured: true }; }
+  else if (S.a.BPF != null) { bpS = sc('BPF'); bpInfo = { measured: false, answer: S.a.BPF }; }
+  const metAge = num(S.m.metAge);
+  const metDelta = metAge != null && a != null && !preg ? metAge - a : null;
+  detail.prevention = { score: mix(pQ, avgW([[bpS, .7], [metAgeScore(metDelta), .3]]), .55, .45), items: ['P1', 'P2', 'P3', 'P4'], bpInfo, metDelta };
+
+  const signals = [];
+  if (!preg && S.a.H0 != null) {
+    if (!menopause()) {
+      const v = id => sc(id) || 0;
+      const cycle = onHAK() ? v('H7') : v('H1');
+      const andro = Math.min(3, v('H2') + v('H3') + v('H4'));
+      const ir = Math.min(3, v('H5') + v('H6') + (S.a.N5 === 0 ? 1 : 0) + (multiHas('P5', 0) ? 1 : 0));
+      const total = cycle + andro + ir;
+      signals.push({ key: 'pcos', name: 'PCOS / PMOS', level: (cycle >= 2 && (andro >= 2 || ir >= 2)) ? 'high' : total >= 3 ? 'mid' : 'low',
+        markers: 'testosteron, SHBG, index volných androgenů, AMH, LH/FSH, inzulin, HOMA-IR' });
+    }
+    const periIds = hormonalItems().filter(id => Q[id].peri);
+    if (periIds.length) {
+      const sum = periIds.reduce((t, id) => t + (sc(id) || 0), 0);
+      signals.push({ key: 'peri', name: menopause() ? 'Menopauza' : 'Perimenopauza', level: sum >= 13 ? 'high' : sum >= 6 ? 'mid' : 'low', markers: 'FSH, estradiol, progesteron' });
+    }
+    const thy = S.a.THY === 'none' ? 0 : multiCount('THY');
+    signals.push({ key: 'thy', name: 'Štítná žláza', level: thy >= 3 ? 'high' : thy === 2 ? 'mid' : 'low', markers: 'TSH, fT4, anti-TPO' });
+  }
+  const LOAD = { low: 10, mid: 45, high: 80 };
+  let hScore = null;
+  if (signals.length) { const l = signals.map(s => LOAD[s.level]); hScore = 100 - (0.6 * Math.max(...l) + 0.4 * l.reduce((x, y) => x + y, 0) / l.length); }
+  detail.hormonal = { score: hScore, signals };
+
+  let sum = 0, wsum = 0;
+  ORDER.forEach(k => { const s = detail[k].score; if (s != null) { sum += s * W[k]; wsum += W[k]; } });
+  const index = wsum ? Math.round(sum / wsum) : 0;
+  ORDER.forEach(k => { if (detail[k].score != null) detail[k].score = Math.round(detail[k].score); });
+  const priorities = ORDER.filter(k => detail[k].score != null).map(k => ({ k, lever: W[k] * (100 - detail[k].score) })).sort((x, y) => y.lever - x.lever).slice(0, 3);
+  const measured = hasBP() && num(S.m.pulse) != null;
+  const confidence = measured && hasReport() ? 3 : (measured || hasReport()) ? 2 : 1;
+
+  const flags = [];
+  if (hasBP()) {
+    const c = bpCat(num(S.m.sys), num(S.m.dia));
+    if (c === 5) flags.push({ level: 'crit', text: 'Naměřený tlak je výrazně zvýšený. Doporučujeme ho dnes znovu změřit a obrátit se na lékaře.' });
+    else if (c >= 3) flags.push({ level: 'warn', text: 'Naměřený tlak je zvýšený. Doporučujeme hodnotu ověřit opakovaným měřením u praktického lékaře.' });
+  } else if (S.a.BPF === 2) flags.push({ level: 'warn', text: 'Uvádíte, že míváte vysoký tlak. Doporučujeme ho pravidelně měřit a hodnoty probrat s lékařem.' });
+  if (num(S.m.pulse) > 100) flags.push({ level: 'warn', text: 'Klidový tep je nad 100 za minutu. Doporučujeme hodnotu ověřit opakovaným měřením u praktického lékaře.' });
+  if (S.a.R5 === 0) flags.push({ level: 'info', text: 'Chrápání nebo vynechávání dechu ve spánku může souviset se spánkovou apnoe. Vyplatí se to ověřit.' });
+  const noWeightLanguage = (B != null && B < 18.5) || multiHas('ANAM', 2);
+
+  const contra = [];
+  if (multiHas('ANAM', 0)) contra.push('anamnézy onemocnění slinivky břišní (pankreatitida)');
+  if (multiHas('ANAM', 1)) contra.push('výskytu syndromu MEN 1/2 nebo medulárního karcinomu štítné žlázy v rodinné anamnéze');
+  if (multiHas('ANAM', 2)) contra.push('léčby poruchou příjmu potravy v anamnéze');
+  if (B != null && B < 23) contra.push(`nízkého BMI (${dec(B.toFixed(1))})`);
+  if (preg) contra.push('těhotenství nebo kojení');
+  const internal = {
+    soft: [multiHas('P6', 2) && 'diabetes', multiHas('ANAM', 3) && 'žlučník', multiHas('ANAM', 4) && 'ledviny / játra', multiHas('P6', 3) && 'štítná žláza',
+           (multiHas('P6', 0) || multiHas('P6', 1)) && 'kardiovaskulární rizika', S.a.GLP > 0 && 'zkušenost s léky na regulaci hmotnosti'].filter(Boolean),
+    pacemaker: multiHas('ANAM', 5)
+  };
+  return { index, detail, priorities, confidence, flags, contra, internal, noWeightLanguage, bmi: B, age: a, preg };
+}
+
+/* ---------- texts (nahradí AI) ---------- */
+const BAND = s => s >= 85 ? 0 : s >= 70 ? 1 : s >= 55 ? 2 : 3;
+const BAND_LABEL = [['Silný základ', 'good'], ['Dobrý základ', 'ok'], ['Prostor pro zlepšení', 'warn'], ['Zaslouží pozornost', 'crit']];
+const BAR_COLOR = ['var(--good)', 'var(--ok)', 'var(--warn)', 'var(--crit)'];
+const TXT = {
+  movement: ['Pohyb je vaší silnou stránkou. Síla i kondice pracují pro dlouhověkost.', 'Dobrý pohybový základ. Největší rezerva bývá v síle a pravidelnosti.', 'Pohybu je méně, než tělo potřebuje k udržení svalů a kondice.', 'Pohyb je teď největší nevyužitá páka.'],
+  nutrition: ['Stravovací návyky i složení těla vypadají velmi dobře.', 'Solidní základ s prostorem pro doladění bílkovin a kvality jídla.', 'Strava a složení těla ukazují prostor ke zlepšení metabolického zdraví.', 'Výživa a složení těla si zaslouží pozornost.'],
+  mind: ['Stres zvládáte dobře a energie vám slouží.', 'Psychická pohoda je v dobrém stavu, jen občas přichází přetížení.', 'Vnímaný stres je zvýšený a může ubírat energii i soustředění.', 'Stres je teď vysoký a dlouhodobě ovlivňuje spánek, hormony i metabolismus.'],
+  recovery: ['Spánek a regenerace jsou na výborné úrovni.', 'Regenerace je dobrá, drobné rezervy jsou ve spánku.', 'Spánek a regenerace nestačí na plné dobití.', 'Regenerace je slabým místem, spánek nestačí na plné dobití.'],
+  prevention: ['Prevenci máte pod kontrolou.', 'Dobrý preventivní základ, jen pár věcí se vyplatí ověřit.', 'V prevenci jsou mezery nebo rizikové faktory, které stojí za pozornost.', 'Prevence si žádá pozornost. Rizikové faktory je dobré ověřit laboratorně.'],
+  slow: ['Denní rytmus, světlo i vztahy podporují vaši regeneraci.', 'Dobrý životní rytmus s drobnými rezervami.', 'Tempo a rytmus dne ubírají prostor pro regeneraci.', 'Život ve vysokém tempu. Rytmus dne si zaslouží změnu.'],
+  hormonal: ['Neukazují se výrazné hormonální signály.', 'Objevují se mírné signály, které je dobré sledovat.', 'Některé odpovědi ukazují na možnou hormonální nerovnováhu.', 'Výrazné signály, které se vyplatí ověřit laboratorně.']
+};
+const KEEP = { movement: 'Udržte pravidelný silový trénink aspoň 2× týdně.', nutrition: 'Držte bílkoviny v každém hlavním jídle.', mind: 'Chraňte si každý den chvíli jen pro sebe.',
+  recovery: 'Držte stabilní čas usínání i o víkendu.', prevention: 'Pokračujte v pravidelných preventivních prohlídkách.', slow: 'Chraňte si ranní světlo a pravidelný rytmus.',
+  hormonal: 'Sledujte svůj cyklus a změny energie, pomůže to při každé kontrole.' };
+function firstStep(k, d, R) {
+  if (k === 'hormonal') return d.score < 70 ? 'Ověřte hormonální signály laboratorně. Přesně to řeší vstupní diagnostika.' : KEEP.hormonal;
+  if (k === 'mind' && d.pssScore != null && d.pssScore <= 40) return 'Zařaďte denně 5 minut pomalého dýchání: 4 sekundy nádech, 6 sekund výdech.';
+  if (k === 'prevention' && d.bpInfo && ((d.bpInfo.measured && d.bpInfo.cat >= 2) || (!d.bpInfo.measured && d.bpInfo.answer === 2))) return 'Změřte si tlak doma několik dní po sobě ve stejnou dobu a hodnoty si zapište.';
+  const cand = d.items.map(id => ({ id, s: sc(id) })).filter(x => x.s != null && Q[x.id].tip).sort((x, y) => x.s - y.s);
+  if (cand.length && cand[0].s < 70) { const tip = Q[cand[0].id].tip; return R.noWeightLanguage && /hubnut/i.test(tip) ? KEEP[k] : tip; }
+  return KEEP[k];
+}
+function summaryText(R) {
+  const b = BAND(R.index);
+  const opener = ['Máte silný základ pro dlouhověkost.', 'Máte dobrý základ, na kterém se dá stavět.', 'Máte solidní základ a jasný prostor pro zlepšení.', 'Tělo vám dává signály, kterým se vyplatí věnovat pozornost.'][b];
+  const strong = ORDER.filter(k => R.detail[k].score != null).sort((x, y) => R.detail[y].score - R.detail[x].score)[0];
+  const top = R.priorities.map(p => NAMES[p.k]);
+  const list = top.length > 1 ? top.slice(0, -1).join(', ') + ' a ' + top[top.length - 1] : top.join('');
+  return `${opener} Nejsilnější je u vás ${NAMES[strong]}, největší prostor vidíme v oblastech ${list}.`;
+}
+
+/* ==========================================================================
+   AI (Apps Script → Claude API)
+   ========================================================================== */
+async function api(action, data, timeoutMs) {
+  if (!CFG.apiUrl) throw Object.assign(new Error('no_api'), { code: 'no_api' });
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    // text/plain = bez CORS preflightu, Apps Script ho přijme
+    const res = await fetch(CFG.apiUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(Object.assign({ action, session: S.sid, src: CFG.src }, data)), signal: ctrl.signal });
+    const j = await res.json();
+    if (!j.ok) throw Object.assign(new Error(j.error || 'api_error'), { code: j.error || 'api_error' });
+    return j;
+  } catch (e) {
+    if (e.name === 'AbortError') throw Object.assign(new Error('timeout'), { code: 'timeout' });
+    throw e;
+  } finally { clearTimeout(timer); }
+}
+
+/* ---------- report z váhy ---------- */
+const readB64 = blob => new Promise((ok, fail) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.onerror = fail; r.readAsDataURL(blob); });
+async function prepareFile(file) {
+  const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+  if (isPdf) {
+    if (file.size > 8 * 1024 * 1024) throw Object.assign(new Error('file_too_large'), { code: 'file_too_large' });
+    return { mediaType: 'application/pdf', data: await readB64(file) };
+  }
+  // fotky (i HEIC z iPhonu, pokud je prohlížeč umí zobrazit) převedeme na JPEG s delší stranou max. 1568 px
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((ok, fail) => { const i = new Image(); i.onload = () => ok(i); i.onerror = fail; i.src = url; });
+    const scale = Math.min(1, 1568 / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas');
+    c.width = Math.round(img.naturalWidth * scale); c.height = Math.round(img.naturalHeight * scale);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    const blob = await new Promise(ok => c.toBlob(ok, 'image/jpeg', 0.9));
+    return { mediaType: 'image/jpeg', data: await readB64(blob) };
+  } catch (e) {
+    throw Object.assign(new Error('unsupported_file'), { code: 'unsupported_file' });
+  } finally { URL.revokeObjectURL(url); }
+}
+function uploadStatusHTML() {
+  const st = S.m.upload;
+  if (!S.m.fileName) return '<span>PDF z aplikace nebo fotka displeje</span>';
+  if (st === 'reading') return '<span>Čtu hodnoty z reportu…</span>';
+  if (st === 'ok') return '<span class="ok">Hodnoty jsme načetli. Zkontrolujte je prosím.</span>';
+  if (st === 'notreport') return '<span style="color:var(--warn)">Soubor nevypadá jako report z váhy. Zkuste jiný, nebo hodnoty opište.</span>';
+  if (st === 'toolarge') return '<span style="color:var(--warn)">Soubor je větší než 8 MB. Zkuste snímek obrazovky, nebo hodnoty opište.</span>';
+  if (st === 'error') return '<span style="color:var(--warn)">Report se nepodařilo přečíst. Hodnoty prosím opište níže.</span>';
+  return '<span class="ok">Soubor nahrán. Hodnoty prosím opište níže.</span>';
+}
+function rerenderMeasure() { if (S.cur === 'measure') { const y = scrollY; render(); scrollTo(0, y); } else save(); }
+async function handleReport(file) {
+  S.m.fileName = file.name; S.m.reportWarn = [];
+  if (!CFG.apiUrl) { S.m.upload = 'manual'; rerenderMeasure(); return; }
+  S.m.upload = 'reading'; rerenderMeasure();
+  try {
+    const payload = await prepareFile(file);
+    const { report: r } = await api('extractReport', { file: payload }, CFG.extractTimeoutMs);
+    if (!r.isBodyCompositionReport) { S.m.upload = 'notreport'; rerenderMeasure(); return; }
+    const put = (k, v) => { if (v != null) S.m[k] = String(v); };
+    put('rWeight', r.weightKg); put('fat', r.bodyFatPct); put('visc', r.visceralFat); put('metAge', r.metabolicAge);
+    if (r.muscleVsRange) S.m.muscle = { below: 0, within: 1, above: 2 }[r.muscleVsRange];
+    S.m.reportHeight = r.heightCm; S.m.reportName = r.personName; S.m.reportDevice = r.deviceName; S.m.reportDate = r.measuredAt;
+    S.m.reportExtra = { fatMassKg: r.fatMassKg, skeletalMuscleKg: r.skeletalMuscleKg, bmrKcal: r.bmrKcal, waterKg: r.waterKg, proteinKg: r.proteinKg, mineralsKg: r.mineralsKg, subcutaneousFatKg: r.subcutaneousFatKg, bmi: r.bmi };
+    const warn = [];
+    if (r.measuredAt) { const days = (Date.now() - new Date(r.measuredAt + 'T00:00:00')) / 864e5; if (days > 30) warn.push(`Měření je z ${new Date(r.measuredAt).toLocaleDateString('cs-CZ')}, tedy starší než 30 dní. Pro přesný výsledek se prosím změřte znovu.`); }
+    if (r.sex === 'male') warn.push('Report je vedený pro muže. Patří opravdu vám?');
+    const a = age(); if (r.age != null && a != null && Math.abs(r.age - a) > 2) warn.push(`Věk na reportu (${r.age}) nesedí s vaším datem narození. Patří report opravdu vám?`);
+    S.m.reportWarn = warn; S.m.upload = 'ok';
+  } catch (e) {
+    S.m.upload = e.code === 'file_too_large' ? 'toolarge' : 'error';
+    console.warn('[Snapshot] čtení reportu selhalo:', e.code || e.message);
+  }
+  rerenderMeasure();
+}
+function heightMismatchHTML() {
+  const h = num(S.a.height), rh = S.m.reportHeight;
+  return h != null && rh != null && Math.abs(h - rh) > 3 ? `<p class="tip" style="color:var(--warn)">Výška na reportu (${Math.round(rh)} cm) se liší od zadané. Patří report opravdu vám?</p>` : '';
+}
+
+/* ---------- texty na míru ---------- */
+function aiInput(R) {
+  const answers = [];
+  STRIP_Q.forEach(sec => sectionItems(sec).forEach(id => {
+    if (['ANAM', 'GLP', 'H0'].includes(id)) return;            // citlivou anamnézu do AI neposíláme
+    const q = Q[id], v = S.a[id]; if (v == null) return;
+    const a = q.multi ? (v === 'none' ? q.none : v.map(i => q.opts[i]).join(', ')) : q.opts[v] && q.opts[v].label;
+    if (a != null) answers.push({ pillar: sec, q: (q.pre ? q.pre + ': ' : '') + q.label, a });
+  }));
+  const m = {};
+  if (hasBP()) m.bloodPressure = `${num(S.m.sys)}/${num(S.m.dia)} (${BP_LABELS[bpCat(num(S.m.sys), num(S.m.dia))][0]})`;
+  else if (S.a.BPF != null) m.bloodPressureSelfReported = Q.BPF.opts[S.a.BPF].label;
+  if (num(S.m.pulse) != null) m.pulse = num(S.m.pulse);
+  if (!R.preg) {
+    if (R.bmi != null) m.bmi = +R.bmi.toFixed(1);
+    if (num(S.m.fat) != null) m.bodyFatPct = num(S.m.fat);
+    if (num(S.m.visc) != null) m.visceralFat = num(S.m.visc);
+    if (S.m.muscle != null && S.m.muscle < 3) m.muscleVsRange = ['below', 'within', 'above'][S.m.muscle];
+    if (R.detail.prevention.metDelta != null) m.metabolicAgeDelta = R.detail.prevention.metDelta;
+  }
+  if (num(S.m.grip) != null) { m.gripKg = num(S.m.grip); m.gripBand = gripBand(num(S.m.grip), R.age)[0]; }
+  return {
+    age: R.age, index: R.index, band: BAND_LABEL[BAND(R.index)][0], confidence: R.confidence,
+    scores: Object.fromEntries(ORDER.map(k => [k, R.detail[k].score])),
+    priorities: R.priorities.map(p => p.k),
+    signals: R.detail.hormonal.signals.map(s => ({ name: s.name, level: s.level, markers: s.markers })),
+    measurements: m, safetyNotes: R.flags.map(f => f.text),
+    pregnant: R.preg, avoidWeightLossLanguage: R.noWeightLanguage, answers
+  };
+}
+function hashStr(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); }
+const aiKeyFor = R => hashStr(JSON.stringify(aiInput(R)));
+function aiTexts(R) { return S.ai && S.ai.key === aiKeyFor(R) ? S.ai.texts : null; }
+
+/* ---------- generating ---------- */
+const GEN_MESSAGES = [
+  'Propojujeme odpovědi s naměřenými hodnotami.',
+  'Počítáme váš Longevity Index.',
+  'Porovnáváme hodnoty s normami pro váš věk.',
+  'Hledáme oblasti s největším dopadem.',
+  'Vyhodnocujeme hormonální signály.',
+  'Připravujeme první kroky na míru.',
+  'Dokončujeme váš Snapshot.'
+];
+let genTimer = null;
+function runGenerating() {
+  clearInterval(genTimer);
+  const rows = [...document.querySelectorAll('#checks > div')];
+  const expected = CFG.apiUrl ? 15000 : 3200;     // odhad délky; skutečný konec určí dokončení textů
+  const t0 = performance.now();
+  let aiDone = !CFG.apiUrl, doneAt = null, shownMsg = 0, finished = false;
+  const status = $('#genStatus');
+  const setMsg = i => {
+    if (!status || i === shownMsg) return; shownMsg = i;
+    status.classList.add('fade');
+    setTimeout(() => { status.textContent = GEN_MESSAGES[i]; status.classList.remove('fade'); }, 350);
+  };
+  // časovač místo requestAnimationFrame: běží i ve skrytém panelu nebo po přepnutí aplikace; plynulost dodá CSS přechod
+  const frame = () => {
+    if (S.cur !== 'generating') { clearInterval(genTimer); return; }
+    const t = performance.now() - t0;
+    // plynulý průběh: do odhadu 0–90 %, pak pomalu k 97 %; po dokončení textů rychle na 100 %
+    let p = t < expected ? 0.9 * (1 - Math.pow(1 - t / expected, 2)) : Math.min(0.97, 0.9 + (t - expected) / 60000);
+    if (aiDone && t >= 1800) { if (doneAt == null) doneAt = { t, p }; p = Math.min(1, doneAt.p + (t - doneAt.t) / 700 * (1 - doneAt.p)); }
+    const step = p >= 1 ? rows.length : Math.min(rows.length - 1, Math.floor(p * rows.length));
+    rows.forEach((r, j) => { r.className = j < step ? 'done' : j === step ? 'cur' : ''; });
+    const arc = $('#arc'); if (arc) arc.setAttribute('stroke-dashoffset', (1482.8 * (1 - p)).toFixed(1));
+    const txt = $('#ringTxt'); if (txt) txt.textContent = Math.round(p * 100) + ' %';
+    const bar = $('#genBar'); if (bar) bar.style.width = (p * 100).toFixed(1) + '%';
+    setMsg(Math.min(GEN_MESSAGES.length - 1, step));
+    if (p >= 1 && !finished) {
+      finished = true; clearInterval(genTimer);
+      setTimeout(() => { if (S.cur === 'generating') { S.cur = 'result'; render(); window.scrollTo(0, 0); } }, 650);
+    }
+  };
+  genTimer = setInterval(frame, 120);
+  frame();
+  if (CFG.apiUrl) {
+    const R = compute(); const key = aiKeyFor(R);
+    if (S.ai && S.ai.key === key) aiDone = true;
+    else api('generateSnapshot', { input: aiInput(R) }, CFG.generateTimeoutMs)
+      .then(j => { S.ai = { key, texts: j.texts, at: new Date().toISOString() }; })
+      .catch(e => { S.ai = null; console.warn('[Snapshot] texty z AI nedorazily, použijeme šablony:', e.code || e.message); })
+      .finally(() => { aiDone = true; save(); });
+  }
+}
+
+/* ---------- result ---------- */
+function festivalActive() { return CFG.festivalSources.includes(CFG.src) && new Date().toISOString().slice(0, 10) <= CFG.festivalUntil; }
+
+/* ---------- texty výsledku (stránka, PDF i e-mail z jednoho místa) ---------- */
+function pillarStatus(R, k) { const AI = aiTexts(R); return (AI && AI.pillars[k] && AI.pillars[k].status) || TXT[k][BAND(R.detail[k].score)]; }
+function pillarStep(R, k) { const AI = aiTexts(R); return (AI && AI.pillars[k] && AI.pillars[k].firstStep) || firstStep(k, R.detail[k], R); }
+function prioWhy(R, i) { const AI = aiTexts(R); const ap = AI && AI.priorities[i]; return ap && ap.pillar === R.priorities[i].k ? ap.why : null; }
+function summaryOf(R) { const AI = aiTexts(R); return AI && AI.summary ? AI.summary : summaryText(R); }
+function contraText(R) { return R.contra.length ? `Farmakoterapie pro vás pravděpodobně nebude vhodná z důvodu ${R.contra.join(', ')}. Program vám lékař nastaví bez ní.` : ''; }
+function signalText(s) { return s.level === 'low' ? 'Z odpovědí nevyplývá nic, co by si žádalo pozornost.' : `Signál, který se vyplatí ověřit laboratorně. Vstupní diagnostika ověří: ${s.markers}.`; }
+const SIGNAL_LABEL = { low: ['nízký signál', 'good'], mid: ['střední signál', 'warn'], high: ['výrazný signál', 'crit'] };
+const PLANS = [['Nutrition plan', 'Bílkoviny a jídelníček na míru'], ['Movement plan', 'Síla, kardio, ochrana svalů'], ['Mind plan', 'Stres, soustředění, návyky'],
+  ['Recovery plan', 'Spánkový protokol a regenerace'], ['Prevention plan', 'Screeningy a kontrolní testy'], ['Slow living plan', 'Rytmus dne, světlo, vztahy'],
+  ['Longevity Index 2.0', 'Biologický věk z krve'], ['Lékařská péče', 'Farmakoterapie dle indikace lékaře']];
+
+function measurementTiles(R) {
+  const tiles = []; const a = R.age;
+  if (hasBP()) { const c = bpCat(num(S.m.sys), num(S.m.dia)); tiles.push(['Krevní tlak', `${num(S.m.sys)}/${num(S.m.dia)}`, '', BP_LABELS[c]]); }
+  if (num(S.m.pulse) != null) { const p = num(S.m.pulse); tiles.push(['Klidový tep', p, '/min', p <= 70 ? ['dobrý', 'good'] : p <= 80 ? ['průměrný', 'ok'] : p <= 90 ? ['zvýšený', 'warn'] : ['vysoký', 'crit']]); }
+  if (R.bmi != null && !R.preg) { const b = R.bmi; tiles.push(['BMI', dec(b.toFixed(1)), '', b < 18.5 ? ['nízké', 'warn'] : b < 25 ? ['v normě', 'good'] : b < 30 ? ['zvýšené', 'warn'] : ['vysoké', 'crit']]); }
+  if (num(S.m.fat) != null && !R.preg) { const f = num(S.m.fat), n = fatNorm(a); tiles.push(['Tělesný tuk', dec(f), '%', f <= n[0] ? ['v normě', 'good'] : f <= n[1] ? ['zvýšený', 'warn'] : ['vysoký', 'crit']]); }
+  if (num(S.m.visc) != null && !R.preg) { const v = num(S.m.visc); tiles.push(['Viscerální tuk', v, '', v <= 9 ? ['v normě', 'good'] : v <= 14 ? ['zvýšený', 'warn'] : ['vysoký', 'crit']]); }
+  if (S.m.muscle != null && S.m.muscle < 3 && !R.preg) tiles.push(['Svalová hmota', ['pod', 'v', 'nad'][S.m.muscle], 'rozsahem', [['k posílení', 'warn'], ['v normě', 'good'], ['nadprůměrná', 'good']][S.m.muscle]]);
+  if (num(S.m.grip) != null) tiles.push(['Síla stisku', dec(num(S.m.grip)), 'kg', gripBand(num(S.m.grip), a)]);
+  if (R.detail.prevention.metDelta != null) { const dl = R.detail.prevention.metDelta; tiles.push(['Metabolický věk', num(S.m.metAge), 'let', dl <= 0 ? [`o ${Math.abs(dl)} let mladší`, 'good'] : dl <= 5 ? [`+${dl} let`, 'warn'] : [`+${dl} let`, 'crit']]); }
+  return tiles;
+}
+
+/* ---------- výsledek ---------- */
+function radarSVG(R, theme) {
+  const light = theme === 'light';
+  const keys = ORDER.filter(k => R.detail[k].score != null);
+  const N = keys.length, cx = 400, cy = 400, rad = 300, id = light ? 'L' : 'D';
+  const pt = (i, r) => { const a = -Math.PI / 2 + i * 2 * Math.PI / N; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; };
+  const P = (i, r) => pt(i, r).map(v => v.toFixed(1)).join(',');
+  const grid = light ? '25,25,27' : '255,255,255';
+  let g = `<defs><linearGradient id="rf${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7A3E9E" stop-opacity="${light ? .45 : .62}"/><stop offset="1" stop-color="#2F86CC" stop-opacity="${light ? .35 : .5}"/></linearGradient>
+    <linearGradient id="rs${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${light ? '#6E3D9C' : '#B391E0'}"/><stop offset="1" stop-color="${light ? '#2F86CC' : '#4FA3E0'}"/></linearGradient></defs>`;
+  [100, 75, 50, 25].forEach(v => { g += `<polygon points="${keys.map((_, i) => P(i, rad * v / 100)).join(' ')}" fill="none" stroke="rgba(${grid},${v === 100 ? .2 : .08})"/>`; });
+  g += `<g stroke="rgba(${grid},.08)">${keys.map((_, i) => { const [x, y] = pt(i, rad); return `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`; }).join('')}</g>`;
+  g += `<polygon points="${keys.map((k, i) => P(i, rad * R.detail[k].score / 100)).join(' ')}" fill="url(#rf${id})" stroke="url(#rs${id})" stroke-width="3" stroke-linejoin="round"/>`;
+  g += `<g fill="${light ? '#6E3D9C' : '#fff'}">${keys.map((k, i) => { const [x, y] = pt(i, rad * R.detail[k].score / 100); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6"/>`; }).join('')}</g>`;
+  g += `<g font-family="Montserrat, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="4" fill="${light ? '#5A5E6B' : 'rgba(244,244,246,.7)'}">`;
+  keys.forEach((k, i) => {
+    const [x, y] = pt(i, rad + 44);
+    const anchor = Math.abs(x - cx) < 10 ? 'middle' : x > cx ? 'start' : 'end';
+    g += `<text x="${x.toFixed(1)}" y="${(y + 8).toFixed(1)}" text-anchor="${anchor}">${NAMES[k].toUpperCase()} <tspan fill="${light ? '#19191B' : '#fff'}" font-weight="700" font-size="24" letter-spacing="0">${R.detail[k].score}</tspan></text>`;
+  });
+  g += '</g>';
+  return `<svg viewBox="-180 0 1160 800" role="img" aria-label="Radar sedmi složek Longevity Indexu">${g}</svg>`;
+}
+
+// Oslovení v 5. pádě u běžných českých ženských jmen, ostatní v 1. pádě (stejný seznam jako v Apps Scriptu)
+const VOC_A = 'adéla adriana alena alexandra alžběta andrea aneta anna barbora bára blanka božena dana daniela darina denisa dita dominika dorota drahomíra eliška ela ema eva gabriela hana hedvika helena irena iva ivana jana jaroslava jarmila jindřiška jitka johana jolana kamila karolína kateřina katka klára kristina kristýna lada ladislava laura lenka linda ludmila magda magdaléna maja mája marcela marta martina michaela milada milena miloslava miroslava monika naděžda nela nikola olga pavla pavlína petra radka renata romana růžena sabina sára simona soňa stanislava šárka štěpánka tamara taťána tereza valentýna vanda vendula věra veronika vladimíra vlasta zdenka zdeňka zuzana žaneta'.split(' ');
+const VOC_SAME = 'marie lucie julie natálie emilie sofie viktorie antonie amálie rozálie alice libuše dagmar karin ester miriam ingrid nikol'.split(' ');
+function vocative(name) {
+  const k = (String(name || '').trim().split(/\s+/)[0] || '').toLowerCase(); const n = k.charAt(0).toUpperCase() + k.slice(1);
+  if (VOC_A.includes(k)) return n.slice(0, -1) + 'o';
+  return n || null;                                 // ostatní a cizí jména v 1. pádě
+}
+
+function renderResult() {
+  const R = compute(); window.__snapshot = R;
+  const AI = aiTexts(R);
+  const band = BAND_LABEL[BAND(R.index)];
+  const dots = '●'.repeat(R.confidence) + '○'.repeat(3 - R.confidence);
+  const LV = { crit: ['Upozornění', 'crit'], warn: ['Doporučení', 'warn'], info: ['Poznámka', 'ok'] };
+  const alerts = R.flags.length || R.contra.length ? `<div class="alerts">${R.flags.map(f => `<div class="alert"><span class="pill sm ${LV[f.level][1]}">${LV[f.level][0]}</span><span>${esc(f.text)}</span></div>`).join('')}
+    ${R.contra.length ? `<div class="alert"><span class="pill sm ok">Farmakoterapie</span><span>${esc(contraText(R))}</span></div>` : ''}</div>` : '';
+
+  const prio = R.priorities.map((p, i) => {
+    const why = prioWhy(R, i);
+    return `<div class="it"><span class="n">${i + 1}</span><div><b>${NAMES[p.k]} · ${R.detail[p.k].score}</b>${why ? `<p>${esc(why)}</p>` : ''}<p${why ? ' style="color:var(--ink)"' : ''}>${esc(pillarStep(R, p.k))}</p></div></div>`;
+  }).join('');
+  const rows = ORDER.filter(k => R.detail[k].score != null).map(k => {
+    const d = R.detail[k], b = BAND(d.score);
+    return `<div class="prow"><div class="t"><span>${NAMES[k]}</span><b>${d.score}</b></div><div class="track"><i style="width:${d.score}%;background:${BAR_COLOR[b]}"></i></div>
+      <p>${esc(pillarStatus(R, k))}</p><p class="step"><b>První krok:</b> ${esc(pillarStep(R, k))}</p></div>`;
+  }).join('');
+
+  const COL = { good: 'var(--good)', ok: 'var(--ok)', warn: 'var(--warn)', crit: 'var(--crit)' };
+  const tiles = measurementTiles(R);
+  const tilesHTML = tiles.map(([l, v, u, st]) => `<div class="val"><small>${esc(l)}</small><b>${esc(String(v))}${u ? `<em>${esc(u)}</em>` : ''}</b>${st ? `<span style="color:${COL[st[1]]}">${esc(st[0])}</span>` : ''}</div>`).join('');
+
+  const sig = R.detail.hormonal.signals;
+  const sigHTML = sig.length ? sig.map(s => `<div class="sig"><span>${esc(s.name)}</span><span class="pill sm ${SIGNAL_LABEL[s.level][1]}">${SIGNAL_LABEL[s.level][0]}</span><p>${esc(signalText(s))}</p></div>`).join('')
+    : `<p class="lead">${R.preg ? 'V těhotenství a při kojení hormonální část nevyhodnocujeme.' : 'Hormonální část nebyla vyplněna.'}</p>`;
+  const plans = PLANS.map(([t, d]) => `<div class="plan">${icon('i-lock')}<div><b>${t}</b><span>${d}</span></div></div>`).join('');
+
+  return `
+  <section class="rsec first"><div class="split" style="align-items:center">
+    <div>
+      <span class="eyebrow">Aeternum Longevity Snapshot</span>
+      <h1 class="h-l">${vocative(S.a.firstName) ? `${esc(vocative(S.a.firstName))}, tady je<br>váš výsledek` : 'Tady je<br>váš výsledek'}</h1>
+      <div class="index-row"><div class="index-num">${R.index}</div>
+        <div class="index-side"><span class="small-caps" style="color:var(--ink)">Longevity Index</span><span class="pill ${band[1]}">${band[0]}</span>
+          <span class="small-caps">Přesnost odhadu <span class="conf-dots">${dots}</span></span></div></div>
+      <p class="lead summary">${esc(summaryOf(R))}</p>
+      ${sendStatusHTML()}
+      ${alerts}
+      <a class="small-caps more" href="#detail">Podrobné výsledky ${icon('i-down')}</a>
+    </div>
+    <div class="radar">${radarSVG(R)}</div>
+  </div></section>
+
+  <section class="rsec" id="detail"><div class="split">
+    <div><span class="eyebrow">Kde stojíte</span><h2 class="h-l">Sedm složek,<br>tři priority</h2><div class="prio">${prio}</div></div>
+    <div>${rows}</div>
+  </div></section>
+
+  ${tiles.length ? `<section class="rsec"><div class="split">
+    <div><span class="eyebrow">Měření</span><h2 class="h-l">Naměřené<br>hodnoty</h2><p class="lead" style="margin-top:clamp(16px,calc(1.4*var(--u)),calc(26px*var(--k)))">Orientační hodnoty z domácích nebo stánkových přístrojů.</p></div>
+    <div class="vals">${tilesHTML}</div></div></section>` : ''}
+
+  <section class="rsec"><div class="split">
+    <div><span class="eyebrow">Hormonální rovnováha</span><h2 class="h-l">Hormonální<br>signály</h2><p class="lead" style="margin-top:clamp(16px,calc(1.4*var(--u)),calc(26px*var(--k)))">Signály z odpovědí, nikoli diagnóza. Ověřit je může jen laboratoř.</p>${AI && AI.labNote ? `<p class="lead" style="margin-top:14px;color:var(--ink)">${esc(AI.labNote)}</p>` : ''}</div>
+    <div>${sigHTML}</div></div></section>
+
+  <section class="rsec" id="cta"><div class="split">
+    <div><span class="eyebrow">Připraveno pro vaši konzultaci</span>
+      <h2 class="h-l">Aeternum Longevity<br><span class="light">Program</span></h2>
+      <p class="lead" style="margin-top:clamp(16px,calc(1.4*var(--u)),calc(28px*var(--k)))">Plný program personalizujeme po vstupní diagnostice. Každý plán vychází z vašich laboratorních výsledků.</p>
+      <div class="plans">${plans}</div></div>
+    <div class="panel" id="panel">${ctaHTML(R)}</div>
+  </div></section>
+
+  <div class="disclaimer">Aeternum Longevity Snapshot je orientační vyhodnocení na základě vašich odpovědí a měření. Nejde o lékařské vyšetření ani diagnózu a nenahrazuje konzultaci s lékařem. Pokud máte zdravotní potíže, obraťte se na svého lékaře.<br>Aeternum Clinic · My Design Creatives s.r.o. · IČO 07162235 · Pod Harfou 943/34, 190 00 Praha 9 · info@aeternumclinic.cz</div>`;
+}
+
+function ctaHTML(R) {
+  if (S.cta.done) {
+    const p = S.payment;
+    return `<div class="success"><div class="tick">${icon('i-check')}</div><span class="eyebrow">Hotovo</span><h3>Děkujeme, zájem jsme zaznamenali</h3>
+      ${p ? `<p class="lead" style="margin-top:14px">Platební údaje jsme poslali na <b style="color:var(--ink)">${esc(S.a.email)}</b>. Můžete zaplatit hned, QR kód naskenujte v bankovní aplikaci.</p>
+      <div class="pay"><div class="qr" id="payQr" aria-label="QR platba"></div>
+        <dl><dt>Částka</dt><dd>${fmt(p.amount)} Kč</dd><dt>Účet</dt><dd>${esc(p.account)}</dd><dt>Var. symbol</dt><dd>${esc(p.vs)}</dd><dt>Splatnost</dt><dd>${esc(czDate(p.due))}</dd></dl></div>
+      <p class="fine" style="margin-top:16px">Kód k odběru a kalendář s lékařem přijdou e-mailem po přijetí platby.</p>`
+      : `<p class="lead" style="margin-top:14px">Testovací verze bez napojení: nic se neodesílá.</p>`}
+      ${CFG.kiosk ? `<p class="fine" id="kioskReset" style="margin-top:8px">Obrazovka se za ${CFG.thanksResetSeconds} s připraví pro další návštěvnici.</p>` : ''}</div>`;
+  }
+  const fest = festivalActive(); const price = fest ? CFG.priceFestival : CFG.priceRegular;
+  return `<span class="eyebrow">Další krok</span><h3>Vstupní diagnostika</h3>
+    <div class="price"><b>${fmt(price)} Kč</b>${fest ? `<s>${fmt(CFG.priceRegular)} Kč</s>` : ''}</div>
+    ${fest ? '<div style="margin-top:14px"><span class="pill ok">Festivalová cena do 30. 11.</span></div>' : ''}
+    <div class="bul"><div>Komplexní hormonální profil s více než 50 biomarkery</div><div>Odborné posouzení lékařem, online nebo osobně v Praze</div><div>Výstupem je váš plný Aeternum Longevity Program</div></div>
+    ${R.contra.length ? '<p class="fine" style="margin-top:14px">Diagnostika i program jsou pro vás dostupné. Lékař péči nastaví s ohledem na vaši anamnézu.</p>' : ''}
+    <label class="cbox interest"><input type="checkbox" id="ctaOpen" ${S.cta.open ? 'checked' : ''}><span class="box">${icon('i-check')}</span><span>Ano, mám zájem o vstupní diagnostiku do programu Aeternum Longevity Program</span></label>
+    ${S.cta.open ? `<div class="ctaform">
+      <div class="ufrow">${uf('surname', 'Příjmení', { store: 'a', type: 'text', inputmode: 'text', placeholder: 'Nováková', autocomplete: 'family-name' })}
+        ${uf('rc', 'Rodné číslo', { store: 'a', type: 'text', inputmode: 'numeric', placeholder: '845312/1234' })}
+        ${uf('phone', 'Telefon', { store: 'a', type: 'tel', inputmode: 'tel', placeholder: '+420 …', optional: true, autocomplete: 'tel' })}</div>
+      <p class="fine">Rodné číslo potřebujeme k objednání laboratorních testů. Neposílá se e-mailem.</p>
+      ${cbox('ctaConsent', S.a.ctaConsent, 'Souhlasím, aby mě Aeternum Clinic kontaktovala s dalšími kroky a aby moje jméno, datum narození, rodné číslo, výšku a váhu zpracovala pro účely Aeternum Clinic a pro zprostředkování a objednání odběru ve smluvní laboratoři.')}
+      <button type="button" class="btn pri" id="ctaSubmit">Potvrdit zájem</button>
+      <span class="err" id="ctaErr" role="alert"></span>
+      <p class="fine">Kód k odběru a kalendář s lékařem přijdou e-mailem po přijetí platby.</p></div>` : ''}`;
+}
+function rerenderCTA() { const p = $('#panel'); if (p) p.innerHTML = ctaHTML(window.__snapshot || compute()); save(); if (S.payment) showPaymentQr(); }
+const czDate = iso => { const p = String(iso || '').split('-'); return p.length === 3 ? `${+p[2]}. ${+p[1]}. ${p[0]}` : iso; };
+
+function validateRC(raw, dob) {
+  const s = String(raw || '').replace(/[\s/]/g, '');
+  if (!/^\d{9,10}$/.test(s)) return 'Rodné číslo má 9 nebo 10 číslic.';
+  const yy = +s.slice(0, 2); let mm = +s.slice(2, 4); const dd = +s.slice(4, 6);
+  if (s.length === 10) { const n = +s.slice(0, 9), c = +s[9]; if (!((+s % 11 === 0) || ((n % 11) === 10 && c === 0))) return 'Rodné číslo není platné. Zkontrolujte prosím překlepy.'; }
+  const female = mm > 50; if (mm > 70) mm -= 70; else if (mm > 50) mm -= 50; else if (mm > 20) mm -= 20;
+  const year = s.length === 9 ? 1900 + yy : (yy < 54 ? 2000 + yy : 1900 + yy);
+  if (dob) { const [Y, M, D] = dob.split('-').map(Number); if (Y !== year || M !== mm || D !== dd) return 'Rodné číslo neodpovídá zadanému datu narození.'; }
+  if (!female) return 'Rodné číslo neodpovídá ženskému tvaru. Zkontrolujte prosím překlepy.';
+  return null;
+}
+
+/* ---------- knihovny (načítají se až při potřebě) ---------- */
+const LIBS = {
+  h2c: 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+  jspdf: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+  qr: 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js'
+};
+const libPromises = {};
+function lib(name) {
+  if (!libPromises[name]) libPromises[name] = new Promise((ok, fail) => {
+    const s = document.createElement('script'); s.src = LIBS[name]; s.async = true;
+    s.onload = ok; s.onerror = () => { delete libPromises[name]; fail(new Error('lib_' + name)); };
+    document.head.appendChild(s);
+  });
+  return libPromises[name];
+}
+
+/* ---------- PDF ---------- */
+const snapshotKey = R => hashStr(JSON.stringify(aiInput(R)) + '|' + (S.a.firstName || '') + '|' + (S.a.email || '') + '|' + (aiTexts(R) ? S.ai.key : '-'));
+const fmtPdf = n => fmt(n).replace(/[\u202f\u00a0]/g, ' ');
+// gradient po písmenech (html2canvas neumí background-clip:text)
+const G_DARK = ['#7A3E9E', '#2F86CC'], G_LIGHT = ['#B391E0', '#4FA3E0'];
+function gradSpans(text, colors) {
+  const hex = h => [1, 3, 5].map(i => parseInt(h.substr(i, 2), 16));
+  const a = hex(colors[0]), b = hex(colors[1]); const chars = Array.from(String(text)); const n = Math.max(1, chars.length - 1);
+  return chars.map((ch, i) => ch === ' ' ? ' ' : `<span style="color:rgb(${a.map((v, k) => Math.round(v + (b[k] - v) * i / n)).join(',')})">${esc(ch)}</span>`).join('');
+}
+const PDF_COL = { good: '#2E9E6A', ok: '#6F8A10', warn: '#C9861F', crit: '#D0543F' };
+function pdfPagesHTML(R) {
+  const band = BAND_LABEL[BAND(R.index)];
+  const date = new Date().toLocaleDateString('cs-CZ');
+  const name = esc(S.a.firstName || '');
+  const logo = dark => `<div class="pl"><svg viewBox="0 0 120 120" width="36" height="36"><g fill="none" stroke="#6B3A96" stroke-width="6.5"><circle cx="45" cy="70" r="37"/><circle cx="70" cy="47" r="40"/></g></svg><div><b>${gradSpans('AETERNUM', dark ? G_LIGHT : G_DARK)}</b><span>CLINIC</span></div></div>`;
+  const head = n => `<div class="ph">${logo(n === 1)}<span class="pn">Longevity Snapshot · ${n} / 4</span></div>`;
+  const foot = `<div class="ft"><span>Orientační vyhodnocení, nejde o lékařské vyšetření ani diagnózu a nenahrazuje konzultaci s lékařem.</span><span>${name} · ${date}</span></div>`;
+  const pill = st => `<span class="pill" style="color:${PDF_COL[st[1]]};border:1.2px solid ${PDF_COL[st[1]]}">${esc(st[0])}</span>`;
+  const bandCol = { good: '#8FE3B9', ok: '#C9E05A', warn: '#F2B45A', crit: '#EE8A7D' }[band[1]];
+
+  const p1 = `<div class="pp dark">
+    <svg style="position:absolute;inset:0;width:794px;height:1123px" viewBox="0 0 794 1123" preserveAspectRatio="none" aria-hidden="true">
+      <defs><linearGradient id="pw" x1="0.1" y1="0" x2="0.45" y2="1"><stop offset="0" stop-color="#17609A"/><stop offset=".4" stop-color="#1F8AD2"/><stop offset=".72" stop-color="#5E57B4"/><stop offset="1" stop-color="#8E3C9C"/></linearGradient>
+      <filter id="pb" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="26"/></filter></defs>
+      <path d="M860 520 C760 640 640 700 520 760 C400 820 330 940 300 1180 L860 1180 Z" fill="url(#pw)" filter="url(#pb)" opacity=".9"/></svg>
+    <div style="position:relative">${head(1)}
+      <div style="margin-top:84px"><span class="eb">${gradSpans(date, G_LIGHT)}</span>
+        <p style="font-size:46px;font-weight:700;line-height:1.02;margin-top:10px;letter-spacing:-.01em">Aeternum Longevity<br><span class="lt">${gradSpans('Snapshot', G_LIGHT)}</span></p>
+        <p style="font-size:13px;letter-spacing:.3em;font-weight:600;margin-top:18px;color:rgba(244,244,246,.7);text-transform:uppercase">${name}</p></div>
+      <div style="display:flex;align-items:center;gap:30px;margin-top:46px">
+        <div style="font-size:150px;font-weight:200;line-height:.86;letter-spacing:-.04em">${gradSpans(String(R.index), G_LIGHT)}</div>
+        <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+          <span style="font-size:11px;letter-spacing:.3em;font-weight:700">LONGEVITY INDEX</span>
+          <span class="pill" style="color:${bandCol};border:1.2px solid ${bandCol}">${band[0]}</span>
+          <span style="font-size:9px;letter-spacing:.24em;font-weight:600;color:rgba(244,244,246,.55)">PŘESNOST ODHADU ${'●'.repeat(R.confidence)}${'○'.repeat(3 - R.confidence)}</span></div></div>
+      <p class="lead" style="margin-top:30px;font-size:14px;max-width:560px">${esc(summaryOf(R))}</p>
+      <div style="width:520px;margin:34px 0 0 20px">${radarSVG(R)}</div>
+    </div>${foot}</div>`;
+
+  const rows = ORDER.filter(k => R.detail[k].score != null).map(k => {
+    const d = R.detail[k], b = BAND(d.score);
+    return `<div class="prow2"><div class="t"><span>${NAMES[k]}</span><b>${d.score}</b></div><div class="tr"><i style="width:${d.score}%;background:${PDF_COL[['good', 'ok', 'warn', 'crit'][b]]}"></i></div>
+      <p>${esc(pillarStatus(R, k))}</p><p class="s"><b>${gradSpans('První krok:', G_DARK)}</b> ${esc(pillarStep(R, k))}</p></div>`;
+  }).join('');
+  const p2 = `<div class="pp">${head(2)}<div style="margin-top:34px"><span class="eb">${gradSpans('Kde stojíte', G_DARK)}</span><h2>Sedm složek <span class="lt">${gradSpans('dlouhověkosti', G_DARK)}</span></h2></div>
+    <div style="margin-top:14px">${rows}</div>${foot}</div>`;
+
+  const prio = R.priorities.map((p, i) => { const why = prioWhy(R, i); return `<div class="pri"><span class="n">${i + 1}</span><div><b>${NAMES[p.k]} · ${R.detail[p.k].score}</b>${why ? `<p>${esc(why)}</p>` : ''}<p class="s"><b style="font-size:10.5px">${gradSpans('První krok:', G_DARK)}</b> ${esc(pillarStep(R, p.k))}</p></div></div>`; }).join('');
+  const tiles = measurementTiles(R).map(([l, v, u, st]) => `<div><small>${esc(l)}</small><b>${esc(String(v))}${u ? `<em>${esc(u)}</em>` : ''}</b>${st ? `<span style="color:${PDF_COL[st[1]]}">${esc(st[0])}</span>` : ''}</div>`).join('');
+  const sig = R.detail.hormonal.signals.map(s => `<div class="sg"><span>${esc(s.name)}</span>${pill(SIGNAL_LABEL[s.level])}<p>${esc(signalText(s))}</p></div>`).join('');
+  const AI = aiTexts(R);
+  const alerts = R.flags.map(f => `<div class="al">${esc(f.text)}</div>`).join('') + (R.contra.length ? `<div class="al">${esc(contraText(R))}</div>` : '');
+  const p3 = `<div class="pp">${head(3)}<div style="margin-top:34px"><span class="eb">${gradSpans('Vaše priority', G_DARK)}</span><h2>Tři kroky <span class="lt">${gradSpans('s největším dopadem', G_DARK)}</span></h2></div>
+    <div style="margin-top:10px">${prio}</div>
+    ${tiles ? `<p class="h3">Naměřené hodnoty</p><div class="tl">${tiles}</div>` : ''}
+    ${sig ? `<p class="h3">Hormonální signály</p>${AI && AI.labNote ? `<p class="lead" style="margin-top:6px">${esc(AI.labNote)}</p>` : ''}<div style="margin-top:4px">${sig}</div>` : ''}
+    ${alerts ? `<div style="margin-top:14px">${alerts}</div>` : ''}${foot}</div>`;
+
+  const fest = festivalActive(); const price = fest ? CFG.priceFestival : CFG.priceRegular;
+  const p4 = `<div class="pp">${head(4)}<div style="margin-top:34px"><span class="eb">${gradSpans('Připraveno pro vaši konzultaci', G_DARK)}</span><h2>Aeternum Longevity <span class="lt">${gradSpans('Program', G_DARK)}</span></h2>
+    <p class="lead" style="margin-top:12px;max-width:560px">Plný program personalizujeme po vstupní diagnostice. Každý plán vychází z vašich laboratorních výsledků.</p></div>
+    <div class="pgrid">${PLANS.map(([t, d]) => `<div><svg viewBox="0 0 24 24" width="16" height="16"><g fill="none" stroke="#6E3D9C" stroke-width="1.8"><rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></g></svg><div><b>${t}</b><span>${d}</span></div></div>`).join('')}</div>
+    <div class="box"><span class="eb">${gradSpans('Další krok', G_LIGHT)}</span><p style="font-size:22px;font-weight:700;margin-top:8px">Vstupní diagnostika</p>
+      <p class="pr">${fmtPdf(price)} Kč${fest ? `<s>${fmtPdf(CFG.priceRegular)} Kč</s>` : ''}</p>
+      ${fest ? '<p style="font-size:9px;letter-spacing:.22em;font-weight:700;color:#C9E05A;margin-top:4px">FESTIVALOVÁ CENA DO 30. 11. 2026</p>' : ''}
+      <ul><li>Komplexní hormonální profil s více než 50 biomarkery</li><li>Odborné posouzení lékařem, online nebo osobně v Praze</li><li>Výstupem je váš plný Aeternum Longevity Program</li></ul>
+      <p style="font-size:11.5px;margin-top:14px;line-height:1.6">Máte zájem? Odpovězte na e-mail se Snapshotem, zavolejte na <b>+420 775 481 700</b> nebo napište na <b>info@aeternumclinic.cz</b>.</p></div>
+    <p class="lead" style="margin-top:26px;font-size:9.5px">Aeternum Longevity Snapshot je orientační vyhodnocení na základě vašich odpovědí a měření. Nejde o lékařské vyšetření ani diagnózu a nenahrazuje konzultaci s lékařem. Pokud máte zdravotní potíže, obraťte se na svého lékaře.</p>
+    <div class="ft"><span>Aeternum Clinic · My Design Creatives s.r.o. · IČO 07162235 · Pod Harfou 943/34, 190 00 Praha 9</span><span>aeternumclinic.cz</span></div></div>`;
+  return p1 + p2 + p3 + p4;
+}
+
+let pdfCache = null;
+async function buildPdf(R) {
+  const key = snapshotKey(R);
+  if (pdfCache && pdfCache.key === key) return pdfCache;
+  await Promise.all([lib('h2c'), lib('jspdf')]);
+  if (document.fonts && document.fonts.ready) await document.fonts.ready;
+  const host = document.createElement('div');
+  host.className = 'pdf-host'; host.setAttribute('aria-hidden', 'true');
+  host.innerHTML = pdfPagesHTML(R);
+  document.body.appendChild(host);
+  try {
+    const doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', compress: true });
+    const pages = host.querySelectorAll('.pp');
+    for (let i = 0; i < pages.length; i++) {
+      const canvas = await window.html2canvas(pages[i], { scale: 1.6, backgroundColor: null, logging: false, useCORS: true });
+      if (i) doc.addPage();
+      doc.addImage(canvas.toDataURL('image/jpeg', 0.84), 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+    }
+    doc.setProperties({ title: 'Aeternum Longevity Snapshot', author: 'Aeternum Clinic' });
+    pdfCache = { key, blob: doc.output('blob'), b64: doc.output('datauristring').split(',')[1] };
+    return pdfCache;
+  } finally { host.remove(); }
+}
+async function downloadPdf(btn) {
+  const label = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = 'Připravuji PDF…'; }
+  try {
+    const p = await buildPdf(compute());
+    const url = URL.createObjectURL(p.blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `Aeternum-Longevity-Snapshot-${(S.a.firstName || 'klientka').normalize('NFD').replace(/[^\w]/g, '')}.pdf`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+  } catch (e) {
+    console.warn('[Snapshot] PDF se nepodařilo vytvořit:', e);
+    alert('PDF se teď nepodařilo připravit. Zkuste to prosím znovu.');
+  } finally { if (btn) { btn.disabled = false; btn.textContent = label; } }
+}
+
+/* ---------- odeslání Snapshotu (zápis + e-mail s PDF) ---------- */
+let submitPromise = null;
+function sendStatusHTML() {
+  const st = S.send && S.send.state;
+  if (!CFG.apiUrl || !st) return '<p class="send-status" id="sendStatus" hidden></p>';
+  const email = `<b style="color:var(--ink)">${esc(S.a.email)}</b>`;
+  const text = st === 'sending' ? `Posíláme váš Snapshot na ${email}…`
+    : st === 'sent' ? `Snapshot v PDF jsme poslali na ${email}.`
+    : st === 'saved' ? `Snapshot je uložený, ale e-mail se nepodařilo odeslat. Ozveme se vám.`
+    : `Snapshot se nepodařilo odeslat. <button type="button" class="linkbtn" data-act="resubmit" style="padding:0">Zkusit znovu</button>`;
+  return `<p class="send-status ${st === 'saved' ? 'failed' : st}" id="sendStatus" role="status"><span class="dot"></span><span>${text}</span></p>`;
+}
+function setSend(key, state) {
+  S.send = { key, state }; save();
+  const el = $('#sendStatus'); if (el) el.outerHTML = sendStatusHTML();
+}
+function submitPayload(R) {
+  const p = buildPayload(R);
+  delete p.rc; delete p.surname; delete p.phone;
+  return p;
+}
+function emailData(R) {
+  return {
+    firstName: S.a.firstName, index: R.index, band: BAND_LABEL[BAND(R.index)][0], summary: summaryOf(R),
+    priorities: R.priorities.map((p, i) => ({ name: NAMES[p.k], score: R.detail[p.k].score, why: prioWhy(R, i), step: pillarStep(R, p.k) }))
+  };
+}
+function ensureSubmitted() {
+  if (!CFG.apiUrl) return Promise.resolve(null);
+  const R = compute(); const key = snapshotKey(R);
+  if (S.send && S.send.key === key && ['sent', 'saved'].includes(S.send.state) && S.recordId) return Promise.resolve(S.recordId);
+  if (submitPromise && submitPromise.key === key) return submitPromise.p;
+  setSend(key, 'sending');
+  const p = (async () => {
+    let pdf = null;
+    try { pdf = (await buildPdf(R)).b64; } catch (e) { console.warn('[Snapshot] PDF se nepodařilo vytvořit, e-mail půjde bez přílohy:', e); }
+    const j = await api('submitSnapshot', { snapshot: submitPayload(R), email: emailData(R), pdf }, 90000);
+    S.recordId = j.id;
+    setSend(key, j.emailed ? 'sent' : 'saved');
+    return j.id;
+  })().catch(e => { setSend(key, 'failed'); submitPromise = null; console.warn('[Snapshot] odeslání selhalo:', e.code || e.message); throw e; });
+  submitPromise = { key, p };
+  return p;
+}
+
+/* ---------- potvrzení zájmu + platba ---------- */
+const CONFIRM_ERRORS = {
+  rc_invalid: 'Rodné číslo nesouhlasí s datem narození. Zkontrolujte ho prosím.',
+  rate_limited: 'Příliš mnoho pokusů. Zkuste to prosím za chvíli.',
+  bad_phone: 'Telefon zadejte ve tvaru +420 777 123 456.'
+};
+document.addEventListener('click', async e => {
+  const btn = e.target.closest('#ctaSubmit'); if (!btn || btn.disabled) return;
+  const err = (m, f) => { $('#ctaErr').textContent = m; if (f) { const w = document.getElementById('w-' + f); if (w) w.classList.add('invalid'); } };
+  err('');
+  if (!S.a.surname || !S.a.surname.trim()) return err('Vyplňte prosím příjmení.', 'surname');
+  const rcErr = validateRC(S.a.rc, S.a.dob); if (rcErr) return err(rcErr, 'rc');
+  if (S.a.phone && !/^\+?[\d\s]{9,16}$/.test(S.a.phone.trim())) return err('Telefon zadejte ve tvaru +420 777 123 456.', 'phone');
+  if (!S.a.ctaConsent) return err('Pro odeslání je potřeba souhlas.');
+  if (!CFG.apiUrl) { S.cta.done = true; rerenderCTA(); if (CFG.kiosk) startThanksCountdown(); return; }
+  btn.disabled = true; btn.textContent = 'Odesíláme…';
+  try {
+    const id = await ensureSubmitted();
+    const j = await api('confirmInterest', { id, surname: S.a.surname.trim(), rc: S.a.rc, phone: (S.a.phone || '').trim(), consent: true }, 45000);
+    S.payment = { vs: j.vs, amount: j.amount, due: j.due, account: j.account, iban: j.iban, spayd: j.spayd, festival: j.festival, emailed: j.emailed };
+    delete S.a.rc;                                   // rodné číslo po odeslání v prohlížeči nedržíme
+    S.cta.done = true; rerenderCTA();
+    if (CFG.kiosk) startThanksCountdown();
+  } catch (x) {
+    btn.disabled = false; btn.textContent = 'Potvrdit zájem';
+    err(CONFIRM_ERRORS[x.code] || 'Odeslání se nepovedlo. Zkuste to prosím znovu, nebo nám zavolejte na +420 775 481 700.', x.code === 'rc_invalid' ? 'rc' : null);
+  }
+});
+async function showPaymentQr() {
+  const box = $('#payQr'); if (!box || !S.payment) return;
+  try {
+    await lib('qr');
+    const q = window.qrcode(0, 'M'); q.addData(S.payment.spayd); q.make();
+    box.innerHTML = q.createImgTag(6, 2, 'QR platba');
+  } catch (e) { box.textContent = 'QR kód najdete v e-mailu.'; box.style.cssText = 'font-size:13px;color:#19191B;line-height:1.4;padding:16px;max-width:160px'; }
+}
+
+function buildPayload(R) {
+  const fest = festivalActive();
+  return {
+    src: CFG.src, kiosk: CFG.kiosk, startedAt: S.startedAt, finishedAt: new Date().toISOString(),
+    firstName: S.a.firstName, surname: S.a.surname || '', dob: S.a.dob, rc: S.a.rc || '', email: S.a.email, phone: S.a.phone || '',
+    consents: { gdpr: !!S.a.gdpr, marketing: !!S.a.marketing, interest: !!S.a.ctaConsent, version: '2026-09-v1' },
+    age: R.age, height: num(S.a.height), weight: num(S.a.weight), waist: num(S.a.waist), bmi: R.bmi && +R.bmi.toFixed(1),
+    measurements: Object.assign({}, S.m, { upload: undefined, reportWarn: undefined }), measSkipped: S.measSkipped,
+    answers: Object.assign({}, S.a, { rc: undefined, surname: undefined, phone: undefined, email: undefined, firstName: undefined, dob: undefined }),
+    scores: Object.fromEntries(ORDER.map(k => [k, R.detail[k].score])), index: R.index, confidence: R.confidence,
+    priorities: R.priorities.map(p => p.k), signals: R.detail.hormonal.signals.map(s => ({ key: s.key, level: s.level })),
+    flags: R.flags, contraindications: R.contra, internal: R.internal,
+    interest: S.cta.open, price: fest ? CFG.priceFestival : CFG.priceRegular, festival: fest,
+    report: { device: S.m.reportDevice || null, personName: S.m.reportName || null, measuredAt: S.m.reportDate || null, height: S.m.reportHeight || null, extra: S.m.reportExtra || null },
+    aiTexts: aiTexts(R)
+  };
+}
+
+/* ---------- reset & kiosk ---------- */
+let idleTimer = null, idleCount = null, thanksTimer = null, overlayEl = null;
+function resetAll() {
+  clearInterval(genTimer); clearInterval(thanksTimer); clearTimeout(autoT); hideIdle();
+  S = blank(); try { sessionStorage.removeItem(CFG.storageKey); } catch (e) {}
+  render(); window.scrollTo(0, 0);
+}
+function hideIdle() { clearInterval(idleCount); if (overlayEl) { overlayEl.remove(); overlayEl = null; } }
+function armIdle() {
+  if (!CFG.kiosk) return;
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    if (S.cur === 'intro') { armIdle(); return; }
+    let n = CFG.idleCountdown;
+    overlayEl = document.createElement('div'); overlayEl.className = 'overlay';
+    overlayEl.innerHTML = `<div class="box2"><span class="eyebrow">Jste tu ještě?</span><div class="count" id="idleN">${n}</div><p class="lead">Z bezpečnostních důvodů se vyplněné údaje za chvíli smažou.</p><button class="btn pri" type="button" id="idleStay">Pokračovat</button></div>`;
+    document.body.appendChild(overlayEl);
+    $('#idleStay').addEventListener('click', () => { hideIdle(); armIdle(); });
+    idleCount = setInterval(() => { n--; const el = $('#idleN'); if (el) el.textContent = n; if (n <= 0) resetAll(); }, 1000);
+  }, CFG.idleSeconds * 1000);
+}
+function startThanksCountdown() {
+  let n = CFG.thanksResetSeconds; clearInterval(thanksTimer);
+  thanksTimer = setInterval(() => { n--; const el = $('#kioskReset'); if (el) el.textContent = `Obrazovka se za ${n} s připraví pro další návštěvnici.`; if (n <= 0) resetAll(); }, 1000);
+}
+['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(ev => window.addEventListener(ev, () => { if (!overlayEl) armIdle(); }, { passive: true }));
+
+/* ---------- demo (?demo=1) ---------- */
+function fillDemo() {
+  S = blank();
+  Object.assign(S.a, { firstName: 'Petra', dob: '1981-05-14', email: 'petra.demo@example.cz', gdpr: true, marketing: false, height: '168', weight: '72', waist: '86',
+    M1: 1, M2: 0, M3: 1, M4: 2, M5: 1, N1: 1, N2: 1, N3: 1, N4: 1, N5: 0, N6: 1, PSS1: 3, PSS2: 2, PSS3: 2, PSS4: 2, Mi2: 2, Mi3: 1, R1: 2, R2: 2, R3: 0, R4: 1, R5: 1,
+    S1: 1, S2: 1, S3: 1, S4: 2, S5: 0, S6: 1, H0: 1, H1: 2, H2: 1, H3: 1, H4: 0, H5: 0, H6: 1, PM1: 0, PM2: 1, PM3: 2, PM4: 1, PM5: 1, PM6: 0, PM7: 1, PM8: 1, THY: [0, 2],
+    P1: 0, P2: 1, P3: 1, P4: 0, P5: [0], P6: 'none', ANAM: 'none', GLP: 0 });
+  Object.assign(S.m, { sys: '134', dia: '86', pulse: '76', grip: '24', rWeight: '72', fat: '35', visc: '9', metAge: '49', muscle: 0, fileName: 'zprava-o-mereni.pdf' });
+  S.cur = 'result';
+}
+
+/* ---------- boot ---------- */
+if (CFG.demo) { fillDemo(); const t = document.createElement('div'); t.className = 'demo-tag'; t.textContent = 'Ukázková data'; document.body.appendChild(t); }
+else load();
+if (S.cur === 'generating') S.cur = 'q:GLP';
+render();
+armIdle();
+</script>
+</body>
+</html>
