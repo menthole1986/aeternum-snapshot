@@ -319,62 +319,70 @@ main > .screen{width:100%}
 
 /* PDF (vykresluje se mimo obrazovku) */
 .pdf-host{position:fixed;left:-12000px;top:0;width:794px;pointer-events:none}
-.pp{position:relative;width:794px;height:1123px;overflow:hidden;background:#fff;color:#19191B;font-family:'Montserrat',Arial,sans-serif;padding:60px 64px 70px;box-sizing:border-box}
-.pp.dark{background:#19191B;color:#F4F4F6}
+.pp{position:relative;width:794px;height:1123px;overflow:hidden;background:#19191B;color:#F4F4F6;font-family:'Montserrat',Arial,sans-serif;box-sizing:border-box}
 .pp p{margin:0}
-.pp .ph{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.pp .bgx{position:absolute;left:0;top:0;width:794px;height:1123px}
+.pp .ph{position:absolute;left:60px;right:60px;top:46px;display:flex;justify-content:space-between;align-items:center}
+.pp .pc{position:absolute;left:60px;right:60px;top:128px;bottom:86px;overflow:hidden}
 .pp .pl{display:flex;align-items:center;gap:10px}
-.pp .pl svg{width:36px;height:36px;fill:none;stroke:#6B3A96;stroke-width:6.5}
-.pp .pl b{display:block;font-size:17px;letter-spacing:.04em;color:#6E3D9C;font-weight:600;line-height:1;white-space:nowrap}
+.pp .pl svg{width:38px;height:38px}
 .pp .pl > div{flex:none}
-.pp .eb{white-space:nowrap}
-.pp.dark .pl b{color:#9B78CF}
-.pp .pl b + span{display:block;font-size:7px;letter-spacing:.44em;color:#6B4A9A;margin-top:3px;font-weight:600}
-.pp .pn{font-size:9px;letter-spacing:.3em;font-weight:600;color:#8A8D99;text-transform:uppercase}
-.pp .eb{font-size:10px;letter-spacing:.32em;font-weight:700;text-transform:uppercase;color:#6E3D9C}
-.pp.dark .eb{color:#A27AD2}
-.pp h2{font-size:32px;line-height:1.1;font-weight:700;margin:8px 0 0;letter-spacing:-.01em}
-.pp .lt{font-weight:400;color:#6E3D9C}
-.pp.dark .lt{color:#A27AD2}
-.pp .lead{font-size:12.5px;line-height:1.6;color:#5A5E6B;letter-spacing:0;max-width:none}
-.pp.dark .lead{color:rgba(244,244,246,.78)}
-.pp .ft{position:absolute;left:64px;right:64px;bottom:30px;display:flex;justify-content:space-between;gap:20px;font-size:8px;line-height:1.5;color:#8A8D99}
-.pp.dark .ft{color:rgba(244,244,246,.45)}
-.pp .pill{height:24px;font-size:9px;padding:0 11px;letter-spacing:.18em;border-width:1.2px}
-.pp .prow2{padding:11px 0 12px;border-bottom:1px solid #ECEAF1}
-.pp .prow2 .t{display:flex;justify-content:space-between;align-items:baseline}
-.pp .prow2 .t span{font-size:9.5px;letter-spacing:.28em;font-weight:700;text-transform:uppercase}
-.pp .prow2 .t b{font-size:22px;font-weight:700}
-.pp .prow2 .tr{height:3px;background:#ECEAF1;border-radius:2px;margin:5px 0 7px}
-.pp .prow2 .tr i{display:block;height:100%;border-radius:2px}
-.pp .prow2 p{font-size:10.5px;line-height:1.45;color:#5A5E6B}
-.pp .prow2 p.s{color:#19191B;margin-top:3px}
-.pp .prow2 p.s b{color:#6E3D9C}
-.pp .pri{display:grid;grid-template-columns:34px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid #ECEAF1}
-.pp .pri .n{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#7A3E9E,#2F86CC);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
-.pp .pri b{font-size:14px}
-.pp .pri p{font-size:10.5px;line-height:1.5;color:#5A5E6B;margin-top:3px}
-.pp .pri p.s{color:#19191B}
-.pp .tl{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
-.pp .tl div{border-top:1.2px solid #E0DDE8;padding-top:8px}
-.pp .tl small{display:block;font-size:7.5px;letter-spacing:.22em;font-weight:700;color:#8A8D99;text-transform:uppercase}
-.pp .tl b{display:block;font-size:19px;font-weight:600;margin-top:4px}
-.pp .tl b em{font-style:normal;font-size:9px;color:#8A8D99;margin-left:3px}
-.pp .tl span{display:block;font-size:9px;font-weight:600;margin-top:2px}
-.pp .sg{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:9px 0;border-bottom:1px solid #ECEAF1}
-.pp .sg > span:first-child{font-size:9.5px;letter-spacing:.24em;font-weight:700;text-transform:uppercase}
-.pp .sg p{grid-column:1/-1;font-size:10px;line-height:1.45;color:#5A5E6B}
-.pp .al{font-size:10.5px;line-height:1.5;padding:9px 12px;border-radius:10px;background:#F6F3EC;margin-top:8px}
-.pp .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 26px;margin-top:22px}
-.pp .pgrid div{display:flex;gap:10px}
-.pp .pgrid svg{width:16px;height:16px;flex:none;stroke:#6E3D9C;fill:none;stroke-width:1.8;margin-top:1px}
-.pp .pgrid b{display:block;font-size:9.5px;letter-spacing:.2em;font-weight:700;text-transform:uppercase}
-.pp .pgrid span{display:block;font-size:10.5px;color:#5A5E6B;margin-top:2px}
-.pp .box{margin-top:30px;background:#19191B;color:#F4F4F6;border-radius:20px;padding:28px 30px}
-.pp .box .pr{font-size:38px;font-weight:700;margin-top:6px}
-.pp .box .pr s{font-size:15px;color:rgba(244,244,246,.5);font-weight:600;margin-left:10px}
-.pp .box ul{margin:12px 0 0;padding-left:16px;font-size:11px;line-height:1.7;color:rgba(244,244,246,.78)}
-.pp .h3{font-size:13px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;margin-top:26px}
+.pp .pl b{display:block;font-size:18px;letter-spacing:.04em;font-weight:600;line-height:1;white-space:nowrap}
+.pp .pl b + span{display:block;font-size:7.5px;letter-spacing:.44em;color:#8C6BB8;margin-top:4px;font-weight:600}
+.pp .pn{font-size:9.5px;letter-spacing:.3em;font-weight:600;color:rgba(244,244,246,.5);text-transform:uppercase;white-space:nowrap}
+.pp .ft{position:absolute;left:60px;right:60px;bottom:34px;display:flex;justify-content:space-between;gap:24px;font-size:9px;line-height:1.5;color:rgba(244,244,246,.42)}
+.pp .eb{display:block;font-size:11px;letter-spacing:.34em;font-weight:700;text-transform:uppercase;white-space:nowrap}
+.pp h1{font-size:50px;line-height:1.04;font-weight:700;margin:14px 0 0;letter-spacing:-.01em}
+.pp h2{font-size:40px;line-height:1.08;font-weight:700;margin:10px 0 0;letter-spacing:-.01em}
+.pp h2 .lt{font-weight:300}
+.pp .sec{padding:0 0 12px}
+.pp .sec.gap{padding-top:40px}
+.pp .pc > .sec.gap:first-child{padding-top:0}
+.pp .lead{font-size:15px;line-height:1.65;color:rgba(244,244,246,.74);margin-top:14px}
+.pp .pill{display:inline-flex;align-items:center;height:30px;padding:0 14px;border-radius:999px;font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap;border:1.3px solid currentColor}
+.pp .idx{display:flex;align-items:center;gap:34px;margin-top:40px}
+.pp .idx .col{display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.pp .idx .lbl{font-size:12px;letter-spacing:.32em;font-weight:700}
+.pp .idx .acc{font-size:10px;letter-spacing:.26em;font-weight:600;color:rgba(244,244,246,.55)}
+.pp .rule{border-top:1px solid rgba(255,255,255,.11)}
+.pp .pc > .rule:first-child{border-top:0}
+.pp .pri{display:grid;grid-template-columns:50px 1fr;gap:20px;padding:22px 0}
+.pp .pri .n{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#7A3E9E,#2F86CC);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:19px}
+.pp .pri b{display:block;font-size:23px;font-weight:700;line-height:1.2}
+.pp .pri p{font-size:14.5px;line-height:1.6;color:rgba(244,244,246,.72);margin-top:8px}
+.pp .pri p.s,.pp .pr2 p.s{color:#F4F4F6}
+.pp .step{font-weight:700}
+.pp .h3{font-size:12.5px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;padding:34px 0 6px}
+.pp .tl{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 20px;padding-top:10px}
+.pp .tl div{border-top:1px solid rgba(255,255,255,.16);padding-top:12px}
+.pp .tl small{display:block;font-size:9.5px;letter-spacing:.22em;font-weight:700;color:rgba(244,244,246,.55);text-transform:uppercase;white-space:nowrap}
+.pp .tl b{display:block;font-size:28px;font-weight:600;margin-top:6px;white-space:nowrap}
+.pp .tl b em{font-style:normal;font-size:12px;font-weight:500;color:rgba(244,244,246,.55);margin-left:4px}
+.pp .tl span{display:block;font-size:12px;font-weight:600;margin-top:4px}
+.pp .pr2{padding:20px 0 22px}
+.pp .pr2 .t{display:flex;justify-content:space-between;align-items:baseline}
+.pp .pr2 .t span{font-size:13px;letter-spacing:.3em;font-weight:700;text-transform:uppercase}
+.pp .pr2 .t b{font-size:36px;font-weight:700;line-height:1}
+.pp .pr2 .tr{height:4px;background:rgba(255,255,255,.12);border-radius:2px;margin:10px 0 14px}
+.pp .pr2 .tr i{display:block;height:100%;border-radius:2px}
+.pp .pr2 p{font-size:14.5px;line-height:1.6;color:rgba(244,244,246,.72)}
+.pp .pr2 p.s{margin-top:6px}
+.pp .sg{display:grid;grid-template-columns:1fr auto;gap:8px 16px;align-items:center;padding:18px 0}
+.pp .sg > span:first-child{font-size:13px;letter-spacing:.3em;font-weight:700;text-transform:uppercase}
+.pp .sg p{grid-column:1/-1;font-size:14px;line-height:1.6;color:rgba(244,244,246,.72)}
+.pp .al{font-size:14px;line-height:1.6;padding:14px 18px;border-radius:14px;background:rgba(242,180,90,.08);border:1px solid rgba(242,180,90,.35);margin-top:14px}
+.pp .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:24px 34px;padding-top:30px}
+.pp .pgrid > div{display:flex;gap:14px}
+.pp .pgrid svg{width:20px;height:20px;flex:none;margin-top:1px}
+.pp .pgrid b{display:block;font-size:12px;letter-spacing:.26em;font-weight:700;text-transform:uppercase}
+.pp .pgrid span{display:block;font-size:14px;line-height:1.5;color:rgba(244,244,246,.72);margin-top:5px}
+.pp .box{margin-top:40px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.035);border-radius:24px;padding:34px 38px}
+.pp .box .tt{font-size:28px;font-weight:700;margin-top:10px}
+.pp .box .pr{font-size:56px;font-weight:700;margin-top:8px;line-height:1.1;white-space:nowrap}
+.pp .box .pr s{font-size:20px;color:rgba(244,244,246,.5);font-weight:600;margin-left:14px}
+.pp .box .li{display:flex;gap:14px;font-size:15px;line-height:1.55;color:rgba(244,244,246,.8);margin-top:10px}
+.pp .box .li i{flex:none;width:7px;height:7px;border-radius:50%;background:#5B63D3;margin-top:8px}
+.pp .box .ct{font-size:15px;line-height:1.65;margin-top:22px}
 
 /* kiosk overlay + demo */
 .overlay{position:fixed;inset:0;z-index:50;background:rgba(10,10,12,.86);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px}
@@ -423,6 +431,7 @@ const CFG = {
   src: (URLP.get('src') || 'web').toLowerCase(),
   kiosk: URLP.get('kiosk') === '1',
   demo: URLP.get('demo') === '1',
+  mailtest: URLP.get('demo') === '1' && URLP.get('mailtest') === '1',   // ?demo=1&mailtest=1: pošle ukázkový E1 s PDF na info@, bez zápisu do tabulky
   priceRegular: 19970,
   priceFestival: 15970,
   festivalSources: ['herbalance'],
@@ -1438,67 +1447,112 @@ function gradSpans(text, colors) {
   const a = hex(colors[0]), b = hex(colors[1]); const chars = Array.from(String(text)); const n = Math.max(1, chars.length - 1);
   return chars.map((ch, i) => ch === ' ' ? ' ' : `<span style="color:rgb(${a.map((v, k) => Math.round(v + (b[k] - v) * i / n)).join(',')})">${esc(ch)}</span>`).join('');
 }
-const PDF_COL = { good: '#2E9E6A', ok: '#6F8A10', warn: '#C9861F', crit: '#D0543F' };
-function pdfPagesHTML(R) {
+const PDF_COL = { good: '#5ED3A0', ok: '#B5D333', warn: '#F2B45A', crit: '#EE7A6D' };
+const PDF_GLOW = [
+  // obálka: výrazná vlna vpravo dole jako na webu
+  `<path d="M860 520 C760 640 640 700 520 760 C400 820 330 940 300 1180 L860 1180 Z" fill="url(#pw)" filter="url(#pb)" opacity=".9"/>`,
+  `<ellipse cx="760" cy="80" rx="330" ry="260" fill="#5B3A8E" opacity=".32" filter="url(#pb)"/><ellipse cx="40" cy="1120" rx="300" ry="220" fill="#1F6FB0" opacity=".2" filter="url(#pb)"/>`,
+  `<ellipse cx="800" cy="1040" rx="340" ry="280" fill="#1F6FB0" opacity=".26" filter="url(#pb)"/><ellipse cx="-20" cy="120" rx="280" ry="220" fill="#6B3A96" opacity=".2" filter="url(#pb)"/>`
+];
+function pdfBg(i) {
+  return `<svg class="bgx" viewBox="0 0 794 1123" preserveAspectRatio="none" aria-hidden="true"><defs>
+    <linearGradient id="pw" x1="0.1" y1="0" x2="0.45" y2="1"><stop offset="0" stop-color="#17609A"/><stop offset=".4" stop-color="#1F8AD2"/><stop offset=".72" stop-color="#5E57B4"/><stop offset="1" stop-color="#8E3C9C"/></linearGradient>
+    <filter id="pb" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${i ? 70 : 26}"/></filter></defs>${PDF_GLOW[i ? 1 + (i % 2) : 0]}</svg>`;
+}
+// Stránky PDF ve stejném designu jako výsledek na webu. Obsah se sám rozdělí na stránky podle skutečné výšky bloků.
+async function pdfBuildPages(R, host) {
   const band = BAND_LABEL[BAND(R.index)];
   const date = new Date().toLocaleDateString('cs-CZ');
   const name = esc(S.a.firstName || '');
-  const logo = dark => `<div class="pl"><svg viewBox="0 0 120 120" width="36" height="36"><g fill="none" stroke="#6B3A96" stroke-width="6.5"><circle cx="45" cy="70" r="37"/><circle cx="70" cy="47" r="40"/></g></svg><div><b>${gradSpans('AETERNUM', dark ? G_LIGHT : G_DARK)}</b><span>CLINIC</span></div></div>`;
-  const head = n => `<div class="ph">${logo(n === 1)}<span class="pn">Longevity Snapshot · ${n} / 4</span></div>`;
-  const foot = `<div class="ft"><span>Orientační vyhodnocení, nejde o lékařské vyšetření ani diagnózu a nenahrazuje konzultaci s lékařem.</span><span>${name} · ${date}</span></div>`;
-  const pill = st => `<span class="pill" style="color:${PDF_COL[st[1]]};border:1.2px solid ${PDF_COL[st[1]]}">${esc(st[0])}</span>`;
-  const bandCol = { good: '#8FE3B9', ok: '#C9E05A', warn: '#F2B45A', crit: '#EE8A7D' }[band[1]];
+  const g = t => gradSpans(t, G_LIGHT);
+  const logo = `<div class="pl"><svg viewBox="0 0 120 120" width="38" height="38"><g fill="none" stroke="#7A4BB0" stroke-width="6.5"><circle cx="45" cy="70" r="37"/><circle cx="70" cy="47" r="40"/></g></svg><div><b>${g('AETERNUM')}</b><span>CLINIC</span></div></div>`;
+  const foot = `<div class="ft"><span>Orientační vyhodnocení, nejde o lékařské vyšetření ani diagnózu a nenahrazuje konzultaci s lékařem.</span><span style="white-space:nowrap">${name ? name + ' · ' : ''}${date}</span></div>`;
+  const colOf = score => PDF_COL[['good', 'ok', 'warn', 'crit'][BAND(score)]];
+  const pill = (label, col) => `<span class="pill" style="color:${col}">${esc(label)}</span>`;
+  const step = t => `<span class="step">${g('První krok:')}</span> ${esc(t)}`;
+  let page = 0;
+  const newPage = () => {
+    const el = document.createElement('div'); el.className = 'pp';
+    el.innerHTML = `${pdfBg(page++)}<div class="ph">${logo}<span class="pn"></span></div><div class="pc"></div>${foot}`;
+    host.appendChild(el); return el.querySelector('.pc');
+  };
 
-  const p1 = `<div class="pp dark">
-    <svg style="position:absolute;inset:0;width:794px;height:1123px" viewBox="0 0 794 1123" preserveAspectRatio="none" aria-hidden="true">
-      <defs><linearGradient id="pw" x1="0.1" y1="0" x2="0.45" y2="1"><stop offset="0" stop-color="#17609A"/><stop offset=".4" stop-color="#1F8AD2"/><stop offset=".72" stop-color="#5E57B4"/><stop offset="1" stop-color="#8E3C9C"/></linearGradient>
-      <filter id="pb" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="26"/></filter></defs>
-      <path d="M860 520 C760 640 640 700 520 760 C400 820 330 940 300 1180 L860 1180 Z" fill="url(#pw)" filter="url(#pb)" opacity=".9"/></svg>
-    <div style="position:relative">${head(1)}
-      <div style="margin-top:84px"><span class="eb">${gradSpans(date, G_LIGHT)}</span>
-        <p style="font-size:46px;font-weight:700;line-height:1.02;margin-top:10px;letter-spacing:-.01em">Aeternum Longevity<br><span class="lt">${gradSpans('Snapshot', G_LIGHT)}</span></p>
-        <p style="font-size:13px;letter-spacing:.3em;font-weight:600;margin-top:18px;color:rgba(244,244,246,.7);text-transform:uppercase">${name}</p></div>
-      <div style="display:flex;align-items:center;gap:30px;margin-top:46px">
-        <div style="font-size:150px;font-weight:200;line-height:.86;letter-spacing:-.04em">${gradSpans(String(R.index), G_LIGHT)}</div>
-        <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
-          <span style="font-size:11px;letter-spacing:.3em;font-weight:700">LONGEVITY INDEX</span>
-          <span class="pill" style="color:${bandCol};border:1.2px solid ${bandCol}">${band[0]}</span>
-          <span style="font-size:9px;letter-spacing:.24em;font-weight:600;color:rgba(244,244,246,.55)">PŘESNOST ODHADU ${'●'.repeat(R.confidence)}${'○'.repeat(3 - R.confidence)}</span></div></div>
-      <p class="lead" style="margin-top:30px;font-size:14px;max-width:560px">${esc(summaryOf(R))}</p>
-      <div style="width:520px;margin:34px 0 0 20px">${radarSVG(R)}</div>
-    </div>${foot}</div>`;
+  // 1) obálka
+  let img = null;
+  try { img = await indexImage(R, 170); } catch (e) {}
+  const v = vocative(S.a.firstName);
+  const cover = newPage();
+  cover.innerHTML = `<span class="eb">${g('Aeternum Longevity Snapshot')}</span>
+    <h1>${v ? esc(v) + ', tady je' : 'Tady je'}<br>váš výsledek</h1>
+    <div class="idx">${img ? `<img src="data:image/png;base64,${img.b64}" width="${img.width}" height="${img.height}" alt="${R.index}">` : `<div style="font-size:170px;font-weight:200;line-height:.86">${g(String(R.index))}</div>`}
+      <div class="col"><span class="lbl">LONGEVITY INDEX</span>${pill(band[0], PDF_COL[band[1]])}
+        <span class="acc">PŘESNOST ODHADU <span style="color:#4FA3E0;letter-spacing:.1em">${'●'.repeat(R.confidence)}</span><span style="color:rgba(244,244,246,.25);letter-spacing:.1em">${'●'.repeat(3 - R.confidence)}</span></span></div></div>
+    <p class="lead" style="margin-top:34px;font-size:16px">${esc(summaryOf(R))}</p>
+    <div style="width:540px;margin:22px auto 0">${radarSVG(R)}</div>`;
 
-  const rows = ORDER.filter(k => R.detail[k].score != null).map(k => {
-    const d = R.detail[k], b = BAND(d.score);
-    return `<div class="prow2"><div class="t"><span>${NAMES[k]}</span><b>${d.score}</b></div><div class="tr"><i style="width:${d.score}%;background:${PDF_COL[['good', 'ok', 'warn', 'crit'][b]]}"></i></div>
-      <p>${esc(pillarStatus(R, k))}</p><p class="s"><b>${gradSpans('První krok:', G_DARK)}</b> ${esc(pillarStep(R, k))}</p></div>`;
-  }).join('');
-  const p2 = `<div class="pp">${head(2)}<div style="margin-top:34px"><span class="eb">${gradSpans('Kde stojíte', G_DARK)}</span><h2>Sedm složek <span class="lt">${gradSpans('dlouhověkosti', G_DARK)}</span></h2></div>
-    <div style="margin-top:14px">${rows}</div>${foot}</div>`;
+  // 2) plynulý obsah
+  const B = [];
+  const sec = (eb, h, lt, opts = {}) => B.push({ keep: true, brk: opts.brk, html: `<div class="sec${opts.gap ? ' gap' : ''}"><span class="eb">${g(eb)}</span><h2>${h}${lt ? ` <span class="lt">${g(lt)}</span>` : ''}</h2>${opts.lead ? `<p class="lead">${esc(opts.lead)}</p>` : ''}</div>` });
 
-  const prio = R.priorities.map((p, i) => { const why = prioWhy(R, i); return `<div class="pri"><span class="n">${i + 1}</span><div><b>${NAMES[p.k]} · ${R.detail[p.k].score}</b>${why ? `<p>${esc(why)}</p>` : ''}<p class="s"><b style="font-size:10.5px">${gradSpans('První krok:', G_DARK)}</b> ${esc(pillarStep(R, p.k))}</p></div></div>`; }).join('');
-  const tiles = measurementTiles(R).map(([l, v, u, st]) => `<div><small>${esc(l)}</small><b>${esc(String(v))}${u ? `<em>${esc(u)}</em>` : ''}</b>${st ? `<span style="color:${PDF_COL[st[1]]}">${esc(st[0])}</span>` : ''}</div>`).join('');
-  const sig = R.detail.hormonal.signals.map(s => `<div class="sg"><span>${esc(s.name)}</span>${pill(SIGNAL_LABEL[s.level])}<p>${esc(signalText(s))}</p></div>`).join('');
+  sec('Vaše priority', 'Tři kroky', 's největším dopadem', { brk: true });
+  R.priorities.forEach((p, i) => {
+    const why = prioWhy(R, i);
+    B.push({ html: `<div class="pri rule"><span class="n">${i + 1}</span><div><b>${NAMES[p.k]} · ${R.detail[p.k].score}</b>${why ? `<p>${esc(why)}</p>` : ''}<p class="s">${step(pillarStep(R, p.k))}</p></div></div>` });
+  });
+  const tiles = measurementTiles(R);
+  if (tiles.length) {
+    B.push({ keep: true, html: `<p class="h3">${g('Naměřené hodnoty')}</p>` });
+    for (let i = 0; i < tiles.length; i += 4) {
+      B.push({ html: `<div class="tl">${tiles.slice(i, i + 4).map(([l, val, u, st]) => `<div><small>${esc(l)}</small><b>${esc(String(val))}${u ? `<em>${esc(u)}</em>` : ''}</b>${st ? `<span style="color:${PDF_COL[st[1]]}">${esc(st[0])}</span>` : ''}</div>`).join('')}</div>` });
+    }
+  }
+
+  sec('Kde stojíte', 'Sedm složek', 'dlouhověkosti', { brk: true });
+  ORDER.filter(k => R.detail[k].score != null).forEach(k => {
+    const d = R.detail[k];
+    B.push({ html: `<div class="pr2 rule"><div class="t"><span>${NAMES[k]}</span><b>${d.score}</b></div><div class="tr"><i style="width:${d.score}%;background:${colOf(d.score)}"></i></div>
+      <p>${esc(pillarStatus(R, k))}</p><p class="s">${step(pillarStep(R, k))}</p></div>` });
+  });
+
+  const signals = R.detail.hormonal.signals;
   const AI = aiTexts(R);
-  const alerts = R.flags.map(f => `<div class="al">${esc(f.text)}</div>`).join('') + (R.contra.length ? `<div class="al">${esc(contraText(R))}</div>` : '');
-  const p3 = `<div class="pp">${head(3)}<div style="margin-top:34px"><span class="eb">${gradSpans('Vaše priority', G_DARK)}</span><h2>Tři kroky <span class="lt">${gradSpans('s největším dopadem', G_DARK)}</span></h2></div>
-    <div style="margin-top:10px">${prio}</div>
-    ${tiles ? `<p class="h3">Naměřené hodnoty</p><div class="tl">${tiles}</div>` : ''}
-    ${sig ? `<p class="h3">Hormonální signály</p>${AI && AI.labNote ? `<p class="lead" style="margin-top:6px">${esc(AI.labNote)}</p>` : ''}<div style="margin-top:4px">${sig}</div>` : ''}
-    ${alerts ? `<div style="margin-top:14px">${alerts}</div>` : ''}${foot}</div>`;
+  if (signals.length) {
+    sec('Hormonální rovnováha', 'Hormonální', 'signály', { gap: true, lead: (AI && AI.labNote) || 'Signály z odpovědí, nikoli diagnóza. Ověřit je může jen laboratoř.' });
+    signals.forEach(sg => { const L = SIGNAL_LABEL[sg.level]; B.push({ html: `<div class="sg rule"><span>${esc(sg.name)}</span>${pill(L[0], PDF_COL[L[1]])}<p>${esc(signalText(sg))}</p></div>` }); });
+  }
+  R.flags.forEach(f => B.push({ html: `<div class="al">${esc(f.text)}</div>` }));
+  if (R.contra.length) B.push({ html: `<div class="al">${esc(contraText(R))}</div>` });
 
   const fest = festivalActive(); const price = fest ? CFG.priceFestival : CFG.priceRegular;
-  const p4 = `<div class="pp">${head(4)}<div style="margin-top:34px"><span class="eb">${gradSpans('Připraveno pro vaši konzultaci', G_DARK)}</span><h2>Aeternum Longevity <span class="lt">${gradSpans('Program', G_DARK)}</span></h2>
-    <p class="lead" style="margin-top:12px;max-width:560px">Plný program personalizujeme po vstupní diagnostice. Každý plán vychází z vašich laboratorních výsledků.</p></div>
-    <div class="pgrid">${PLANS.map(([t, d]) => `<div><svg viewBox="0 0 24 24" width="16" height="16"><g fill="none" stroke="#6E3D9C" stroke-width="1.8"><rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></g></svg><div><b>${t}</b><span>${d}</span></div></div>`).join('')}</div>
-    <div class="box"><span class="eb">${gradSpans('Další krok', G_LIGHT)}</span><p style="font-size:22px;font-weight:700;margin-top:8px">Vstupní diagnostika</p>
+  sec('Připraveno pro vaši konzultaci', 'Aeternum Longevity', 'Program', { brk: true, lead: 'Plný program personalizujeme po vstupní diagnostice. Každý plán vychází z vašich laboratorních výsledků.' });
+  B.push({ html: `<div class="pgrid">${PLANS.map(([t, d]) => `<div><svg viewBox="0 0 24 24" width="20" height="20"><g fill="none" stroke="#4FA3E0" stroke-width="1.8"><rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></g></svg><div><b>${t}</b><span>${d}</span></div></div>`).join('')}</div>` });
+  B.push({ html: `<div class="box"><span class="eb">${g('Další krok')}</span><p class="tt">Vstupní diagnostika</p>
       <p class="pr">${fmtPdf(price)} Kč${fest ? `<s>${fmtPdf(CFG.priceRegular)} Kč</s>` : ''}</p>
-      ${fest ? '<p style="font-size:9px;letter-spacing:.22em;font-weight:700;color:#C9E05A;margin-top:4px">FESTIVALOVÁ CENA DO 30. 11. 2026</p>' : ''}
-      <ul><li>Komplexní hormonální profil s více než 50 biomarkery</li><li>Odborné posouzení lékařem, online nebo osobně v Praze</li><li>Výstupem je váš plný Aeternum Longevity Program</li></ul>
-      <p style="font-size:11.5px;margin-top:14px;line-height:1.6">Máte zájem? Odpovězte na e-mail se Snapshotem, zavolejte na <b>+420 775 481 700</b> nebo napište na <b>info@aeternumclinic.cz</b>.</p></div>
-    <p class="lead" style="margin-top:26px;font-size:9.5px">Aeternum Longevity Snapshot je orientační vyhodnocení na základě vašich odpovědí a měření. Nejde o lékařské vyšetření ani diagnózu a nenahrazuje konzultaci s lékařem. Pokud máte zdravotní potíže, obraťte se na svého lékaře.</p>
-    <div class="ft"><span>Aeternum Clinic · My Design Creatives s.r.o. · IČO 07162235 · Pod Harfou 943/34, 190 00 Praha 9</span><span>aeternumclinic.cz</span></div></div>`;
-  return p1 + p2 + p3 + p4;
+      ${fest ? `<p style="font-size:11px;letter-spacing:.24em;font-weight:700;color:${PDF_COL.ok};margin-top:6px">FESTIVALOVÁ CENA DO 30. 11. 2026</p>` : ''}
+      <div style="margin-top:16px">${['Komplexní hormonální profil s více než 50 biomarkery', 'Odborné posouzení lékařem, online nebo osobně v Praze', 'Výstupem je váš plný Aeternum Longevity Program'].map(t => `<div class="li"><i></i><span>${t}</span></div>`).join('')}</div>
+      <p class="ct">Máte zájem? Odpovězte na e-mail se Snapshotem, zavolejte na <b style="white-space:nowrap">+420 775 481 700</b> nebo napište na <b>info@aeternumclinic.cz</b>.</p></div>` });
+
+  let pc = cover;
+  const over = () => pc.scrollHeight > pc.clientHeight + 1;
+  for (const blk of B) {
+    if (blk.brk) pc = newPage();
+    const t = document.createElement('div'); t.innerHTML = blk.html.trim();
+    const el = t.firstElementChild; if (blk.keep) el.dataset.keep = '1';
+    pc.appendChild(el);
+    if (over() && pc.children.length > 1) {
+      el.remove();
+      const carry = [];
+      while (pc.lastElementChild && pc.lastElementChild.dataset.keep && carry.length + 1 < pc.children.length) carry.unshift(pc.lastElementChild);
+      carry.forEach(c => c.remove());
+      pc = newPage();
+      carry.forEach(c => pc.appendChild(c));
+      pc.appendChild(el);
+    }
+  }
+  const pages = host.querySelectorAll('.pp');
+  pages.forEach((p, i) => { p.querySelector('.pn').textContent = `Longevity Snapshot · ${i + 1} / ${pages.length}`; });
+  pages[pages.length - 1].querySelector('.ft span').innerHTML = 'Orientační vyhodnocení, nejde o lékařské vyšetření ani diagnózu a nenahrazuje konzultaci s lékařem. Pokud máte zdravotní potíže, obraťte se na svého lékaře.<br>Aeternum Clinic · My Design Creatives s.r.o. · IČO 07162235 · Pod Harfou 943/34, 190 00 Praha 9 · aeternumclinic.cz';
+  return pages;
 }
 
 let pdfCache = null;
@@ -1509,15 +1563,18 @@ async function buildPdf(R) {
   if (document.fonts && document.fonts.ready) await document.fonts.ready;
   const host = document.createElement('div');
   host.className = 'pdf-host'; host.setAttribute('aria-hidden', 'true');
-  host.innerHTML = pdfPagesHTML(R);
   document.body.appendChild(host);
   try {
     const doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', compress: true });
-    const pages = host.querySelectorAll('.pp');
+    const pages = await pdfBuildPages(R, host);
     for (let i = 0; i < pages.length; i++) {
-      const canvas = await window.html2canvas(pages[i], { scale: 1.6, backgroundColor: null, logging: false, useCORS: true });
+      // scale 3 ≈ 290 DPI (asi 1,7 MB); starší mobily s malou pamětí canvasu dostanou scale 2
+      const opts = { backgroundColor: null, logging: false, useCORS: true };
+      let canvas = await window.html2canvas(pages[i], Object.assign({ scale: 3 }, opts));
+      let data = canvas.toDataURL('image/jpeg', 0.92);
+      if (data.length < 5000) { canvas = await window.html2canvas(pages[i], Object.assign({ scale: 2 }, opts)); data = canvas.toDataURL('image/jpeg', 0.92); }
       if (i) doc.addPage();
-      doc.addImage(canvas.toDataURL('image/jpeg', 0.84), 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+      doc.addImage(data, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
     }
     doc.setProperties({ title: 'Aeternum Longevity Snapshot', author: 'Aeternum Clinic' });
     pdfCache = { key, blob: doc.output('blob'), b64: doc.output('datauristring').split(',')[1] };
@@ -1567,8 +1624,26 @@ function emailData(R) {
     priorities: R.priorities.map((p, i) => ({ name: NAMES[p.k], score: R.detail[p.k].score, why: prioWhy(R, i), step: pillarStep(R, p.k) }))
   };
 }
+// Longevity Index jako PNG s plynulým gradientem: e-mailoví klienti neumí gradient v textu.
+async function indexImage(R, px = 64) {
+  const S3 = 3, size = px * S3, text = String(R.index);
+  const font = `300 ${size}px Montserrat, 'Helvetica Neue', Arial, sans-serif`;
+  try { await document.fonts.load(`300 ${size}px Montserrat`, text); } catch (e) {}
+  const c = document.createElement('canvas'), ctx = c.getContext('2d');
+  ctx.font = font;
+  const m = ctx.measureText(text);
+  const asc = Math.ceil(m.actualBoundingBoxAscent || size * .72), desc = Math.ceil(m.actualBoundingBoxDescent || 0);
+  const pad = 2 * S3, w = Math.ceil(m.width) + pad * 2, h = asc + desc + pad * 2;
+  c.width = w; c.height = h;
+  ctx.font = font; ctx.textBaseline = 'alphabetic';
+  const g = ctx.createLinearGradient(0, 0, w, h * .35);
+  g.addColorStop(0, '#B391E0'); g.addColorStop(1, '#4FA3E0');
+  ctx.fillStyle = g; ctx.fillText(text, pad, pad + asc);
+  return { b64: c.toDataURL('image/png').split(',')[1], width: Math.round(w / S3), height: Math.round(h / S3) };
+}
+
 function ensureSubmitted() {
-  if (!CFG.apiUrl) return Promise.resolve(null);
+  if (!CFG.apiUrl || (CFG.demo && !CFG.mailtest)) return Promise.resolve(null);
   const R = compute(); const key = snapshotKey(R);
   if (S.send && S.send.key === key && ['sent', 'saved'].includes(S.send.state) && S.recordId) return Promise.resolve(S.recordId);
   if (submitPromise && submitPromise.key === key) return submitPromise.p;
@@ -1576,7 +1651,11 @@ function ensureSubmitted() {
   const p = (async () => {
     let pdf = null;
     try { pdf = (await buildPdf(R)).b64; } catch (e) { console.warn('[Snapshot] PDF se nepodařilo vytvořit, e-mail půjde bez přílohy:', e); }
-    const j = await api('submitSnapshot', { snapshot: submitPayload(R), email: emailData(R), pdf }, 90000);
+    let indexImg = null;
+    try { indexImg = await indexImage(R); } catch (e) { console.warn('[Snapshot] obrázek indexu se nepodařilo vytvořit:', e); }
+    const snapshot = submitPayload(R);
+    if (CFG.mailtest) { snapshot.email = CFG.email; snapshot.test = true; }
+    const j = await api('submitSnapshot', { snapshot, email: emailData(R), pdf, indexImg }, 90000);
     S.recordId = j.id;
     setSend(key, j.emailed ? 'sent' : 'saved');
     return j.id;
@@ -1670,7 +1749,7 @@ function startThanksCountdown() {
 /* ---------- demo (?demo=1) ---------- */
 function fillDemo() {
   S = blank();
-  Object.assign(S.a, { firstName: 'Petra', dob: '1981-05-14', email: 'petra.demo@example.cz', gdpr: true, marketing: false, height: '168', weight: '72', waist: '86',
+  Object.assign(S.a, { firstName: 'Petra', dob: '1981-05-14', email: CFG.mailtest ? CFG.email : 'petra.demo@example.cz', gdpr: true, marketing: false, height: '168', weight: '72', waist: '86',
     M1: 1, M2: 0, M3: 1, M4: 2, M5: 1, N1: 1, N2: 1, N3: 1, N4: 1, N5: 0, N6: 1, PSS1: 3, PSS2: 2, PSS3: 2, PSS4: 2, Mi2: 2, Mi3: 1, R1: 2, R2: 2, R3: 0, R4: 1, R5: 1,
     S1: 1, S2: 1, S3: 1, S4: 2, S5: 0, S6: 1, H0: 1, H1: 2, H2: 1, H3: 1, H4: 0, H5: 0, H6: 1, PM1: 0, PM2: 1, PM3: 2, PM4: 1, PM5: 1, PM6: 0, PM7: 1, PM8: 1, THY: [0, 2],
     P1: 0, P2: 1, P3: 1, P4: 0, P5: [0], P6: 'none', ANAM: 'none', GLP: 0 });
