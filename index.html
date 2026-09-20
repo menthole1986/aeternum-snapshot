@@ -26,6 +26,8 @@
 @media (min-width:3000px) and (min-height:1650px){:root{--k:2}}
 @media (max-width:760px){:root{--u:1vw}}
 html{-webkit-text-size-adjust:100%}
+/* dvojklepnutí na telefonu stránku nezvětší; roztažení dvěma prsty funguje dál */
+body{touch-action:manipulation}
 html,body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--font)}
 body{min-height:100dvh;line-height:1.5}
 button,input{font:inherit;color:inherit}
